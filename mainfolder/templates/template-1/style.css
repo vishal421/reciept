@@ -90,6 +90,17 @@
   flex: 0 0 90px;
   font-size: 10px;
   opacity: 0.8;
+  /* Override Bootstrap 3 .label which sets color:#fff and adds badge styling */
+  color: #2a2a2a;
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  display: inline;
+  vertical-align: baseline;
+  white-space: normal;
+  font-weight: normal;
+  line-height: inherit;
+  text-align: left;
 }
 
 .line-item > .separator {
