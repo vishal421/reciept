@@ -189,26 +189,20 @@
     }
     .texture-pill input { display: none; }
 
-    /* ── Logo tiles ── */
+    /* ── Logo tiles (pill style, same as texture) ── */
     .logo-tiles { display: flex; gap: 10px; flex-wrap: wrap; }
     .logo-tile {
-      display: flex; flex-direction: row; align-items: center;
-      gap: 8px; cursor: pointer;
-      padding: 7px 14px;
-      border: 1.5px solid var(--line); border-radius: 8px;
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 6px 14px; border: 1.5px solid var(--line);
+      border-radius: 20px; margin: 4px 0;
+      cursor: pointer; font-size: 12px; font-weight: 500;
       background: var(--white); transition: all .15s;
-      font-size: 13px; font-weight: 500; color: var(--ink2);
+      color: var(--ink2);
     }
     .logo-tile:has(input:checked) {
       border-color: var(--blue); background: var(--blue-light);
       color: var(--blue); font-weight: 600;
     }
-    .logo-tile-img {
-      width: 44px; height: 28px;
-      border-radius: 4px; background: var(--white);
-      padding: 2px; object-fit: contain;
-    }
-    .logo-tile span { font-size: 13px; }
     .logo-tile input { display: none; }
 
     /* ── Optional fields ── */
@@ -276,22 +270,7 @@
       letter-spacing: 1px; color: var(--muted); margin-bottom: 14px;
       display: flex; align-items: center; justify-content: space-between;
     }
-    .zoom-row {
-      display: flex; align-items: center; gap: 8px;
-      padding: 8px 12px; border: 1px solid var(--line);
-      border-radius: 6px; background: #fafafa;
-      margin-bottom: 14px;
-    }
-    .zoom-row label {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      color: var(--muted); letter-spacing: 0.5px; margin: 0;
-    }
-    .zoom-row input[type=range] {
-      flex: 1; accent-color: var(--blue); cursor: pointer;
-    }
-    .zoom-row span {
-      font-size: 11px; font-weight: 700; color: var(--ink); min-width: 36px;
-    }
+
     #template-container {
       display: inline-block;
       transform: rotate(-0.3deg);
@@ -419,11 +398,6 @@
       <div class="preview-card-head">
         <span>Live Preview</span>
         <span style="font-size:10px;color:var(--green);font-weight:500;">● Updates instantly</span>
-      </div>
-      <div class="zoom-row">
-        <label>Zoom</label>
-        <input type="range" id="percentage-slider" min="0" max="100" value="100" />
-        <span id="zoom-label">100%</span>
       </div>
       <div id="template-container"></div>
     </div>
