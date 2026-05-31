@@ -263,9 +263,11 @@
     .preview-card {
       background: var(--white); border: 1px solid var(--line);
       border-radius: var(--radius); box-shadow: var(--shadow-md);
-      width: 100%; padding: 16px; text-align: center;
+      width: 100%; padding: 16px;
+      display: flex; flex-direction: column; align-items: center;
     }
     .preview-card-head {
+      width: 100%;
       font-size: 11px; font-weight: 700; text-transform: uppercase;
       letter-spacing: 1px; color: var(--muted); margin-bottom: 14px;
       display: flex; flex-direction: column; align-items: center;
@@ -273,7 +275,7 @@
     }
 
     #template-container {
-      display: inline-block;
+      display: block;
       transform: rotate(-0.3deg);
       filter: drop-shadow(0 8px 28px rgba(0,0,0,.18));
       zoom: 70%;
