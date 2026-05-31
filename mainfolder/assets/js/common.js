@@ -12,7 +12,6 @@ var template      = null;
    ---------------------------------------------------------- */
 async function onInit() {
   await onTemplateSelected();
-  initZoomSlider();
 }
 
 /* ----------------------------------------------------------
@@ -28,9 +27,6 @@ async function onTemplateSelected() {
 
   // Fetch + inject template HTML/CSS into #template-container
   await template.render();
-
-  // Apply current zoom to newly rendered container
-  applyCurrentZoom();
 
   // Push current form values into the freshly-rendered receipt
   generate(template);
@@ -78,7 +74,6 @@ function renderTemplateForm(tmpl) {
       var isDefault = f.default || i === 0;
       lbl.innerHTML =
         '<input type="radio" name="' + f.id + '" value="' + f.uri + '" ' + (isDefault ? 'checked' : '') + ' />' +
-        '<img src="' + f.uri + '" alt="' + f.name + '" class="logo-tile-img" />' +
         '<span>' + f.name + '</span>';
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       logoBody.appendChild(lbl);
@@ -155,31 +150,6 @@ function generate(tmpl) {
   });
 
   tmpl.renderData(data);
-}
-
-/* ----------------------------------------------------------
-   Zoom slider  (range 0–100 maps to 50%–150% scale)
-   ---------------------------------------------------------- */
-function applyCurrentZoom() {
-  var slider    = document.getElementById('percentage-slider');
-  var container = document.getElementById('template-container');
-  if (!slider || !container) return;
-  var zoom = 50 + parseInt(slider.value, 10);
-  container.style.zoom = zoom + '%';
-  var lbl = document.getElementById('zoom-label');
-  if (lbl) lbl.textContent = zoom + '%';
-}
-
-function initZoomSlider() {
-  var slider = document.getElementById('percentage-slider');
-  if (!slider) return;
-
-  // Apply initial zoom
-  applyCurrentZoom();
-
-  slider.addEventListener('input', function() {
-    applyCurrentZoom();
-  });
 }
 
 /* ----------------------------------------------------------
