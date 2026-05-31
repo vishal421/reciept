@@ -192,19 +192,23 @@
     /* ── Logo tiles ── */
     .logo-tiles { display: flex; gap: 10px; flex-wrap: wrap; }
     .logo-tile {
-      display: flex; flex-direction: column; align-items: center;
-      gap: 5px; cursor: pointer;
+      display: flex; flex-direction: row; align-items: center;
+      gap: 8px; cursor: pointer;
+      padding: 7px 14px;
+      border: 1.5px solid var(--line); border-radius: 8px;
+      background: var(--white); transition: all .15s;
+      font-size: 13px; font-weight: 500; color: var(--ink2);
+    }
+    .logo-tile:has(input:checked) {
+      border-color: var(--blue); background: var(--blue-light);
+      color: var(--blue); font-weight: 600;
     }
     .logo-tile-img {
-      width: 80px; height: 50px;
-      border: 2px solid var(--line); border-radius: 8px;
-      background: var(--white); padding: 4px;
-      display: flex; align-items: center; justify-content: center;
-      transition: border-color .15s;
-      object-fit: contain;
+      width: 44px; height: 28px;
+      border-radius: 4px; background: var(--white);
+      padding: 2px; object-fit: contain;
     }
-    .logo-tile:has(input:checked) .logo-tile-img { border-color: var(--blue); }
-    .logo-tile span { font-size: 11px; color: var(--muted); font-weight: 500; }
+    .logo-tile span { font-size: 13px; }
     .logo-tile input { display: none; }
 
     /* ── Optional fields ── */
@@ -248,13 +252,6 @@
       cursor: pointer; transition: all .15s;
     }
     .btn-reset:hover { border-color: var(--muted); color: var(--ink); }
-    .btn-preview {
-      padding: 9px 18px; border: 1.5px solid var(--blue);
-      border-radius: 7px; background: var(--white);
-      color: var(--blue); font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: all .15s;
-    }
-    .btn-preview:hover { background: var(--blue-light); }
     .btn-download {
       padding: 9px 22px; border: none;
       border-radius: 7px; background: var(--blue);
@@ -263,11 +260,6 @@
       box-shadow: 0 2px 8px rgba(26,86,219,.25);
     }
     .btn-download:hover { background: var(--blue-dark); }
-    .btn-disabled {
-      padding: 9px 18px; border: 1.5px solid var(--line);
-      border-radius: 7px; background: #f3f4f6;
-      color: var(--muted); font-size: 13px; cursor: not-allowed;
-    }
 
     /* ── PREVIEW COLUMN ── */
     .preview-col {
@@ -414,9 +406,7 @@
     <!-- Action bar -->
     <div class="sec-card">
       <div class="action-bar">
-        <button type="button" class="btn-disabled" disabled>Load Last Saved</button>
         <button type="button" class="btn-reset" id="loadDefaultData">↺ Reset</button>
-        <button type="button" class="btn-preview" id="generate">Preview</button>
         <button type="button" class="btn-download" id="downloadButton">⬇ Download PNG</button>
       </div>
     </div>
@@ -519,7 +509,6 @@
     $('input[name="template"]').on('change', async function () {
       await onTemplateSelected();
     });
-    $('#generate').on('click', function () { generate(template); });
     $('#loadDefaultData').on('click', async function () { await onTemplateSelected(); });
     $('#downloadButton').on('click', function () { downloadReceipt(); });
   });
