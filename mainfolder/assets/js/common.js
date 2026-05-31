@@ -49,7 +49,7 @@ function renderTemplateForm(tmpl) {
     texSection.style.display = 'none';
   } else {
     texSection.style.display = '';
-    var texBody = texSection.querySelector('.panel-body');
+    var texBody = texSection.querySelector('.sec-card-body');
     texBody.innerHTML = '';
     texList.forEach(function(f, i) {
       var lbl = document.createElement('label');
@@ -70,7 +70,7 @@ function renderTemplateForm(tmpl) {
     logoSection.style.display = 'none';
   } else {
     logoSection.style.display = '';
-    var logoBody = logoSection.querySelector('.panel-body');
+    var logoBody = logoSection.querySelector('.sec-card-body');
     logoBody.innerHTML = '';
     logoList.forEach(function(f, i) {
       var lbl = document.createElement('label');
@@ -78,7 +78,7 @@ function renderTemplateForm(tmpl) {
       var isDefault = f.default || i === 0;
       lbl.innerHTML =
         '<input type="radio" name="' + f.id + '" value="' + f.uri + '" ' + (isDefault ? 'checked' : '') + ' />' +
-        '<img src="' + f.uri + '" alt="' + f.name + '" />' +
+        '<img src="' + f.uri + '" alt="' + f.name + '" class="logo-tile-img" />' +
         '<span>' + f.name + '</span>';
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       logoBody.appendChild(lbl);
@@ -92,7 +92,7 @@ function renderTemplateForm(tmpl) {
     optSection.style.display = 'none';
   } else {
     optSection.style.display = '';
-    var optBody = optSection.querySelector('.panel-body');
+    var optBody = optSection.querySelector('.sec-card-body');
     optBody.innerHTML = '';
     optList.forEach(function(f) {
       var lbl = document.createElement('label');
@@ -112,7 +112,7 @@ function renderTemplateForm(tmpl) {
     dataSection.style.display = 'none';
   } else {
     dataSection.style.display = '';
-    var dataRow = dataSection.querySelector('.panel-body .row');
+    var dataRow = dataSection.querySelector('.sec-card-body .row');
     dataRow.innerHTML = '';
     fieldList.forEach(function(f) {
       var col = document.createElement('div');
