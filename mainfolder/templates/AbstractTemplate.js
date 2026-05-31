@@ -24,7 +24,7 @@ class AbstractTemplate {
       await new Promise(res => {
         this._cssLink.onload  = res;
         this._cssLink.onerror = res;
-        setTimeout(res, 300);
+        setTimeout(res, 500);
       });
     }
 
@@ -32,6 +32,11 @@ class AbstractTemplate {
     const resp = await fetch(this.contentUri);
     if (!resp.ok) throw new Error('Failed to load template: ' + this.contentUri);
     container.innerHTML = await resp.text();
+
+    // Force a style recalc/paint so the freshly-injected CSS is applied
+    // before renderData runs (fixes logo mis-alignment on first load)
+    container.getBoundingClientRect();
+    await new Promise(res => setTimeout(res, 50));
 
     // jQuery-style helper bound to container
     this.rootElem = {
