@@ -1,0 +1,151 @@
+/* ========== TEMPLATE 6 – IndianOil FCC Receipt (Bangalore RR Nagar) ========== */
+
+.template-container {
+  width: 290px;
+  min-height: 760px;
+  position: relative;
+  background-color: #ffffff;
+  background-image: url('../../assets/images/textures/texture-1.jpeg');
+  background-repeat: repeat;
+  background-size: cover;
+  background-blend-mode: normal;
+  overflow: hidden;
+}
+
+.zig-zag-top-bottom {
+  --m: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg)
+      bottom/6px 52% repeat-x,
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg)
+      top/6px 52% repeat-x;
+  -webkit-mask: var(--m);
+  mask: var(--m);
+}
+
+.template-content {
+  font-family: 'Courier New', Courier, monospace;
+  padding: 22px 14px;
+  font-size: 11px;
+  position: relative;
+  z-index: 2;
+  color: #1a1209;
+  line-height: 1.6;
+  -webkit-font-smoothing: none;
+  text-rendering: optimizeSpeed;
+  font-weight: normal;
+  filter: blur(0.1px) opacity(0.9);
+  letter-spacing: 0.15px;
+}
+
+.template-content * {
+  font-weight: normal !important;
+}
+
+.template-content .bold-row .data,
+.template-content .bold-row .label {
+  font-weight: bold !important;
+}
+
+.pump-logo {
+  text-align: center;
+  padding: 16px 0 6px;
+  width: 100%;
+  display: block;
+}
+
+.pump-logo img {
+  display: inline-block;
+  max-width: 75px;
+  max-height: 62px;
+  object-fit: contain;
+  filter: grayscale(100%) contrast(0.6) brightness(0.85);
+  opacity: 0.75;
+  mix-blend-mode: multiply;
+}
+
+.center { text-align: center; }
+
+.t6-welcomes {
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 2px 0 0;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.t6-copy-badge {
+  font-size: 10px;
+  opacity: 0.7;
+  padding: 1px 0 3px;
+}
+
+.station-name {
+  font-size: 12px;
+  letter-spacing: 0.4px;
+  padding: 1px 0 0;
+  text-transform: uppercase;
+}
+
+.station-address {
+  font-size: 10px;
+  opacity: 0.85;
+  padding: 1px 0;
+  text-transform: uppercase;
+}
+
+.tel-line {
+  font-size: 10px;
+  opacity: 0.8;
+  padding: 1px 0 2px;
+}
+
+.t6-blank-line {
+  height: 8px;
+}
+
+.info-block {
+  margin: 1px 0;
+}
+
+.line-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5px;
+  font-size: 11px;
+}
+
+.line-item > .label {
+  flex: 0 0 100px;
+  font-size: 11px;
+  text-transform: none;
+  opacity: 0.8;
+  color: #1a1209;
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  display: inline;
+  font-weight: normal !important;
+  line-height: inherit;
+  text-align: left;
+}
+
+.line-item > .sep {
+  flex: 0 0 12px;
+  text-align: center;
+  opacity: 0.6;
+}
+
+.line-item > .data {
+  flex: 1;
+  word-break: break-all;
+  font-size: 11px;
+  font-weight: normal !important;
+  color: #1a1209;
+}
+
+.footer {
+  text-align: center;
+  font-size: 10px;
+  opacity: 0.65;
+  padding: 10px 0 18px;
+  line-height: 1.8;
+  letter-spacing: 0.2px;
+}
