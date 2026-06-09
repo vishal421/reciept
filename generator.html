@@ -1,24 +1,28 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3"></script>
+<!-- Google tag (gtag.js) — loaded after LCP with partytown-like defer pattern -->
 <script>
-
+  // Delay GTM until after page is interactive to avoid blocking LCP/TBT
   window.dataLayer = window.dataLayer || [];
-
   function gtag(){dataLayer.push(arguments);}
-
   gtag('js', new Date());
-
   gtag('config', 'G-C0CW5VLJW3');
+  // Load GTM script after page load to prevent render blocking
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var s = document.createElement('script');
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3';
+      s.async = true;
+      document.head.appendChild(s);
+    }, 2000); // 2s delay — fires after LCP, preserves all analytics events
+  });
 </script>
- 
+
   <meta charset="utf-8" />
   <meta name="theme-color" content="#1a3a5c" />
   <base href="/" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Free Fuel Bill Generator | Petrol & Diesel Receipt Maker India | FuelBill.in</title>
+  <title>Free Fuel Bill Generator | Petrol &amp; Diesel Receipt Maker India | FuelBill.in</title>
   <meta name="description" content="Generate realistic petrol and diesel bills online for free. Choose from Indian Oil, HP, Bharat Petroleum templates. Add GST, logo, date, amount. Download instantly. No signup required." />
   <meta name="keywords" content="fuel bill generator, petrol bill generator, diesel bill generator, fuel receipt generator, fuel invoice generator, petrol receipt generator, online fuel bill generator, free fuel bill generator, generate fuel bill online, petrol pump bill generator" />
   <meta name="robots" content="index, follow" />
@@ -35,7 +39,7 @@
   <meta property="og:image:height" content="630" />
   <meta name="twitter:image" content="https://fuelbill.in/assets/images/og-image.jpg" />
   <meta property="og:title" content="Free Fuel Bill Generator | FuelBill.in" />
-  <meta property="og:description" content="Generate realistic petrol & diesel bills online. Indian Oil, HP, Bharat Petroleum templates. Free, no signup." />
+  <meta property="og:description" content="Generate realistic petrol &amp; diesel bills online. Indian Oil, HP, Bharat Petroleum templates. Free, no signup." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://fuelbill.in/generator" />
   <meta name="twitter:card" content="summary" />
@@ -58,6 +62,8 @@
   <link rel="preload" href="assets/fonts/thermal-receipt.woff2" as="font" type="font/woff2" crossorigin />
   <!-- Preload default LCP background texture so it's discoverable immediately -->
   <link rel="preload" href="assets/images/textures/texture-1.jpeg" as="image" fetchpriority="high" />
+  <!-- Preload default pump logo to prevent CLS from unsized image -->
+  <link rel="preload" href="assets/images/logos/pump-logo-indian-oil.png" as="image" fetchpriority="high" />
   <link rel="stylesheet" href="assets/css/common.css" media="print" onload="this.media='all'" />
   <noscript><link rel="stylesheet" href="assets/css/common.css" /></noscript>
 
@@ -180,7 +186,7 @@
       border-bottom: 1px solid var(--line);
       display: flex; align-items: center; gap: 8px;
       font-size: 13px; font-weight: 700;
-      color: var(--ink); letter-spacing: 0.2px;
+      color: var(--ink);
       background: #fafafa;
     }
     .sec-card-head .step-badge {
@@ -191,10 +197,11 @@
       flex-shrink: 0;
     }
     .sec-card-body { padding: 16px 18px; }
-    /* Reserve space for dynamically-populated sections to prevent layout shift (CLS) */
-    #section-paper-texture .sec-card-body,
-    #section-pump-logo .sec-card-body,
-    #section-optional-fields .sec-card-body { min-height: 52px; }
+
+    /* Reserve explicit space for dynamically-populated sections to prevent CLS */
+    #section-paper-texture .sec-card-body { min-height: 52px; contain: layout; }
+    #section-pump-logo .sec-card-body     { min-height: 52px; contain: layout; }
+    #section-optional-fields .sec-card-body { min-height: 52px; contain: layout; }
 
     /* ── Template selector – same pill style as texture ── */
     .tpl-grid { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -256,7 +263,7 @@
     .data-field-group label {
       display: block; font-size: 10px; font-weight: 700;
       text-transform: uppercase; color: var(--muted);
-      margin-bottom: 4px; letter-spacing: 0.5px;
+      margin-bottom: 4px;
     }
     .data-field-group input[type=text] {
       width: 100%; padding: 8px 10px;
@@ -284,14 +291,19 @@
       cursor: pointer; transition: all .15s;
     }
     .btn-reset:hover { border-color: var(--muted); color: var(--ink); }
+    /* FIX: Use opacity/transform for animation — NOT letter-spacing (non-composited) */
     .btn-download {
       padding: 9px 22px; border: none;
       border-radius: 7px; background: var(--blue);
       color: #fff; font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: all .15s;
+      cursor: pointer;
       box-shadow: 0 2px 8px rgba(26,86,219,.25);
+      /* Use transform for GPU-composited hover instead of letter-spacing */
+      transition: background .15s, transform .15s, opacity .15s;
+      will-change: transform;
     }
-    .btn-download:hover { background: var(--blue-dark); }
+    .btn-download:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .btn-download:active { transform: translateY(0); }
 
     /* ── PREVIEW COLUMN ── */
     .preview-col {
@@ -307,19 +319,18 @@
     .preview-card-head {
       width: 100%;
       font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1px; color: var(--muted); margin-bottom: 14px;
+      color: var(--muted); margin-bottom: 14px;
       display: flex; flex-direction: column; align-items: center;
       gap: 4px;
     }
 
-    /* ── Receipt preview — use transform:scale instead of zoom for sharp rendering ──
-       zoom renders at logical pixels then downscales (blurry on high-DPI).
-       transform:scale uses GPU compositing and stays crisp on retina/mobile screens. */
+    /* FIX: Use transform:scale with GPU compositing for crisp rendering.
+       Reserve space upfront so wrapper doesn't cause layout shift. */
     .preview-scale-wrapper {
-      /* Templates are ~295px wide. At scale(0.85) the rendered width ≈ 250px.
-         The wrapper must match the scaled height so the card doesn't collapse. */
       width: 295px;
-      /* Height set by JS after template loads */
+      /* Reserve minimum height to prevent CLS while template loads */
+      min-height: 480px;
+      contain: layout;
     }
     #template-container {
       display: block;
@@ -327,18 +338,47 @@
       transform: rotate(-0.3deg) scale(0.85);
       transform-origin: top center;
       filter: drop-shadow(0 8px 28px rgba(0,0,0,.18));
+      /* GPU layer for composited rendering — prevents CLS & jank */
+      will-change: contents;
     }
+
+    /* ── MOBILE: full responsive layout ── */
     @media (max-width: 900px) {
-      /* On mobile the preview is full-width. Scale up to fill ~90% of screen width.
-         Available width ≈ 380px, template width = 295px → scale = 380*0.88/295 ≈ 1.13
-         Cap at 1.0 for tablets (they have more room), use 1.05 for phones */
+      .gen-layout {
+        grid-template-columns: 1fr;
+        /* Show preview BELOW controls on mobile */
+      }
+      .preview-col {
+        position: static;
+        order: -1; /* Move preview to top on mobile for better UX */
+        margin-bottom: 8px;
+      }
       #template-container {
-        transform: rotate(-0.3deg) scale(1.05);
+        /* Scale up to fill mobile width: ~360px viewport, template=295px → scale≈1.08 */
+        transform: rotate(-0.3deg) scale(1.08);
         transform-origin: top center;
       }
       .preview-scale-wrapper {
         width: 100%;
-        max-width: 320px;
+        max-width: 340px;
+        /* Taller reserve to prevent CLS on mobile */
+        min-height: 560px;
+      }
+      .preview-card { padding: 12px; }
+    }
+
+    @media (max-width: 480px) {
+      #template-container {
+        /* Slightly smaller scale for very small phones */
+        transform: rotate(-0.3deg) scale(0.95);
+        transform-origin: top center;
+      }
+      .preview-scale-wrapper {
+        max-width: 295px;
+        min-height: 480px;
+      }
+      .data-field-group input[type=text] {
+        font-size: 16px; /* Prevent iOS zoom on input focus */
       }
     }
 
@@ -354,11 +394,10 @@
     .footer-col a:hover { color: #fff; text-decoration: none; }
     .footer-bottom { border-top: 1px solid #374151; padding-top: 20px; font-size: 12px; text-align: center; }
     .footer-logo { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-    .footer-logo span { color: var(--blue); }
+    /* FIX: contrast issue — "Bill" span was too low contrast. Use a lighter blue. */
+    .footer-logo span { color: #60a5fa; }
 
     @media(max-width:900px){
-      .gen-layout { grid-template-columns: 1fr; }
-      .preview-col { position: static; }
       .footer-grid { grid-template-columns: 1fr; }
     }
   </style>
@@ -482,14 +521,14 @@
       <li><a href="/#faq">FAQ</a></li>
       <li><a href="/generator" class="nav-cta">Generate Bill →</a></li>
     </ul>
-    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Open navigation menu">
       <span></span><span></span><span></span>
     </button>
   </div>
 </nav>
 
 <!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
+<div class="mobile-menu" id="mobileMenu" role="navigation" aria-label="Mobile navigation">
   <a href="/" onclick="closeMenu()">Home</a>
   <a href="/generator" onclick="closeMenu()">⛽ Fuel Bill Generator</a>
   <a href="/food-bill" onclick="closeMenu()">🍽️ Food Bill Generator</a>
@@ -612,7 +651,7 @@
     <div class="preview-card">
       <div class="preview-card-head">
         <span>Live Preview</span>
-        <span style="font-size:11px;color:#15803d;font-weight:600;text-transform:none;letter-spacing:0;">● Updates instantly</span>
+        <span style="font-size:11px;color:#15803d;font-weight:600;text-transform:none;">● Updates instantly</span>
       </div>
       <div class="preview-scale-wrapper">
         <div id="template-container"></div>
@@ -623,7 +662,7 @@
     <div style="margin-top:14px;text-align:center;">
       <div style="font-size:11px;color:var(--muted);line-height:1.7;">
         ✓ Free &nbsp;·&nbsp; ✓ No Watermark &nbsp;·&nbsp; ✓ No Signup<br/>
-        ✓ Indian Oil, HP & Bharat Petroleum logos<br/>
+        ✓ Indian Oil, HP &amp; Bharat Petroleum logos<br/>
         ✓ High resolution PNG download
       </div>
     </div>
@@ -660,7 +699,8 @@
     <div class="footer-grid">
       <div class="footer-col">
         <div class="footer-logo">Fuel<span>Bill</span>.in</div>
-        <p style="font-size:13px;margin-bottom:0;">India's free fuel bill generator. Create realistic petrol and diesel receipts instantly.</p>
+        <!-- FIX: contrast — lightened footer text for WCAG AA compliance -->
+        <p style="font-size:13px;margin-bottom:0;color:#d1d5db;">India's free fuel bill generator. Create realistic petrol and diesel receipts instantly.</p>
       </div>
       <div class="footer-col">
         <div class="footer-col-title">Quick Links</div>
@@ -677,12 +717,12 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2025 FuelBill.in — Free Petrol & Diesel Receipt Generator India. For educational purposes only.</p>
+      <p>© 2025 FuelBill.in — Free Petrol &amp; Diesel Receipt Generator India. For educational purposes only.</p>
     </div>
   </div>
 </footer>
 
-<!-- Libraries -->
+<!-- Libraries — defer all template scripts so they don't block rendering -->
 <script src="assets/js/common.js" defer></script>
 <script src="templates/AbstractTemplate.js" defer></script>
 <script src="templates/template-1/Template1.js" defer></script>
@@ -723,7 +763,6 @@
 </script>
 
 
-<!-- ═══ SEO IMAGE GALLERY — Real template images for Google crawler ═══ -->
 <!-- ═══ SEO IMAGE GALLERY — Real template images for Google crawler ═══ -->
 <section style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;" aria-hidden="true">
   <h2>Free Fuel Bill Generator Templates India</h2>
