@@ -132,6 +132,22 @@
     .nav-cta:hover { background: var(--blue-dark) !important; }
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; border: none; background: none; }
     .hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; transition: all .25s; }
+
+    /* ═══ BOOKMARK BUTTON ═══ */
+    .btn-bookmark {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff8e1; color: #b45309;
+      font-size: 12px; font-weight: 700;
+      padding: 6px 12px; border-radius: 6px;
+      border: 1.5px solid #fcd34d;
+      cursor: pointer; transition: background .15s, border-color .15s;
+      white-space: nowrap;
+    }
+    .btn-bookmark:hover { background: #fef3c7; border-color: #f59e0b; text-decoration: none; color: #92400e; }
+    .btn-bookmark.bookmarked { background: #ecfdf5; color: #065f46; border-color: #6ee7b7; }
+    @media (max-width: 768px) {
+      .btn-bookmark { font-size: 11px; padding: 5px 10px; gap: 4px; }
+    }
     .mobile-menu {
       display: none; position: fixed; inset: 56px 0 0 0;
       background: var(--white); z-index: 99; flex-direction: column;
@@ -412,6 +428,7 @@
       <li><a href="#how-it-works">How It Works</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="/generator" class="nav-cta">Generate Bill →</a></li>
+      <li><button class="btn-bookmark" id="bookmarkBtn" onclick="bookmarkSite()" title="Bookmark FuelBill.in">🔖 Bookmark</button></li>
     </ul>
     <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -427,6 +444,7 @@
   <a href="/generator" onclick="closeMenu()">⛽ Fuel Bill Generator</a>
   <a href="/food-bill" onclick="closeMenu()">🍽️ Food Bill Generator</a>
   <a href="/generator" class="m-cta" onclick="closeMenu()">⚡ Generate Bill Now →</a>
+  <button class="btn-bookmark" id="bookmarkBtnMobile" onclick="bookmarkSite()" style="margin-top:4px;width:100%;justify-content:center;">🔖 Bookmark This Site</button>
 </div>
 
 <!-- ═══ HERO ═══ -->
@@ -765,6 +783,27 @@
   </div>
 </footer>
 
+<script>
+  function bookmarkSite() {
+    var url = 'https://fuelbill.in';
+    var title = 'FuelBill.in – Free Fuel & Food Bill Generator India';
+    var btns = document.querySelectorAll('#bookmarkBtn, #bookmarkBtnMobile');
+    // Modern browsers block programmatic bookmarking; show instructions
+    if (window.sidebar && window.sidebar.addPanel) { // Firefox old
+      window.sidebar.addPanel(title, url, '');
+    } else if (window.external && ('AddFavorite' in window.external)) { // IE
+      window.external.AddFavorite(url, title);
+    } else {
+      var msg = navigator.userAgent.indexOf('Mac') !== -1
+        ? 'Press ⌘+D to bookmark FuelBill.in!'
+        : 'Press Ctrl+D to bookmark FuelBill.in!';
+      btns.forEach(function(b){ b.textContent = '✓ ' + msg; b.classList.add('bookmarked'); });
+      setTimeout(function(){ btns.forEach(function(b){ b.innerHTML='🔖 Bookmark'; b.classList.remove('bookmarked'); }); }, 3500);
+      return;
+    }
+    btns.forEach(function(b){ b.innerHTML='✓ Bookmarked!'; b.classList.add('bookmarked'); });
+  }
+</script>
 <script>
   function toggleFaq(el) {
     const item = el.closest('.faq-item');
