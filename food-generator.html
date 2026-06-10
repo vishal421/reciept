@@ -513,6 +513,20 @@
     .mobile-menu a:hover { background: var(--blue-light); color: var(--blue); text-decoration: none; }
     .mobile-menu .m-cta { background: var(--blue); color: #fff !important; font-weight: 700 !important; text-align: center; margin-top: 8px; border-radius: 8px; }
 
+    /* ══ BOOKMARK BUTTON ══ */
+    .btn-bookmark {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff8e1; color: #b45309;
+      font-size: 12px; font-weight: 700;
+      padding: 6px 12px; border-radius: 6px;
+      border: 1.5px solid #fcd34d;
+      cursor: pointer; transition: background .15s, border-color .15s;
+      white-space: nowrap; line-height: 1;
+    }
+    .btn-bookmark:hover { background: #fef3c7; border-color: #f59e0b; text-decoration: none; color: #92400e; }
+    .btn-bookmark.bookmarked { background: #ecfdf5; color: #065f46; border-color: #6ee7b7; }
+    @media (max-width: 600px) { .btn-bookmark { font-size: 11px; padding: 5px 10px; gap: 4px; } }
+
     /* ══ RESPONSIVE ══ */
     @media (max-width: 900px) {
       .gen-layout { grid-template-columns: 1fr; }
@@ -618,6 +632,7 @@
       <li><a href="/#how-it-works">How It Works</a></li>
       <li><a href="/#faq">FAQ</a></li>
       <li><a href="/food-bill" class="nav-cta">Generate Bill →</a></li>
+      <li><button class="btn-bookmark" id="bookmarkBtn" onclick="bookmarkSite()" title="Bookmark FuelBill.in">🔖 Bookmark</button></li>
     </ul>
     <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -633,6 +648,7 @@
   <a href="/#how-it-works" onclick="closeMenu()">How It Works</a>
   <a href="/#faq" onclick="closeMenu()">FAQ</a>
   <a href="/food-bill" class="m-cta" onclick="closeMenu()">⚡ Generate Food Bill →</a>
+  <button class="btn-bookmark" id="bookmarkBtnMobile" onclick="bookmarkSite()" style="margin-top:4px;width:100%;justify-content:center;">🔖 Bookmark This Site</button>
 </div>
 
 <!-- ══ PAGE HEADER ══ -->
@@ -924,6 +940,24 @@
 <script>
 function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
 function closeMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+function bookmarkSite() {
+  var url = 'https://fuelbill.in';
+  var title = 'FuelBill.in – Free Fuel & Food Bill Generator India';
+  var btns = document.querySelectorAll('#bookmarkBtn, #bookmarkBtnMobile');
+  if (window.sidebar && window.sidebar.addPanel) {
+    window.sidebar.addPanel(title, url, '');
+  } else if (window.external && ('AddFavorite' in window.external)) {
+    window.external.AddFavorite(url, title);
+  } else {
+    var msg = navigator.userAgent.indexOf('Mac') !== -1
+      ? 'Press ⌘+D to bookmark!'
+      : 'Press Ctrl+D to bookmark!';
+    btns.forEach(function(b){ b.textContent = '✓ ' + msg; b.classList.add('bookmarked'); });
+    setTimeout(function(){ btns.forEach(function(b){ b.innerHTML='🔖 Bookmark'; b.classList.remove('bookmarked'); }); }, 3500);
+    return;
+  }
+  btns.forEach(function(b){ b.innerHTML='✓ Bookmarked!'; b.classList.add('bookmarked'); });
+}
 
 /* ═══════════════════════════════════════════
    STATE
