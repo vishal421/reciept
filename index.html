@@ -1,24 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google Analytics — injected after LCP via requestIdleCallback to eliminate TBT/LCP blocking -->
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3"></script>
 <script>
+
   window.dataLayer = window.dataLayer || [];
+
   function gtag(){dataLayer.push(arguments);}
+
   gtag('js', new Date());
-  gtag('config', 'G-C0CW5VLJW3', { send_page_view: false });
-  function loadGA() {
-    var s = document.createElement('script');
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3';
-    s.async = true;
-    s.onload = function() { gtag('event', 'page_view'); };
-    document.head.appendChild(s);
-  }
-  if ('requestIdleCallback' in window) {
-    window.addEventListener('load', function() { requestIdleCallback(loadGA, { timeout: 4000 }); });
-  } else {
-    window.addEventListener('load', function() { setTimeout(loadGA, 3500); });
-  }
+
+  gtag('config', 'G-C0CW5VLJW3');
 </script>
  
   <meta charset="UTF-8" />
@@ -37,8 +30,6 @@
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/icon-180.png" />
   <link rel="manifest" href="/site.webmanifest" />
   <meta name="robots" content="index, follow" />
-  <!-- CSP: mitigate XSS — Best Practices audit fix -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://cdn.splitbee.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google-analytics.com; frame-ancestors 'none';" />
   <meta property="og:image" content="https://fuelbill.in/assets/images/og-image.jpg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -348,20 +339,18 @@
     .seo-content li { margin-bottom: 4px; }
 
     /* ═══ FOOTER ═══ */
-    footer { background: var(--ink); color: rgba(255,255,255,.85); padding: 44px 0 28px; font-size: 13px; }
+    footer { background: var(--ink); color: rgba(255,255,255,.7); padding: 44px 0 28px; font-size: 13px; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 36px; margin-bottom: 32px; }
     .footer-brand .nav-logo { color: #fff; font-size: 16px; margin-bottom: 10px; }
     .footer-brand p { font-size: 12.5px; line-height: 1.7; max-width: 260px; }
     footer h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,.9); margin-bottom: 12px; }
     footer ul { list-style: none; }
     footer li { margin-bottom: 8px; }
-    /* FIX contrast: upgraded from .6 (fails WCAG AA) to .85 on dark background */
-    footer a { color: rgba(255,255,255,.85); font-size: 13px; }
+    footer a { color: rgba(255,255,255,.6); font-size: 13px; }
     footer a:hover { color: #fff; text-decoration: none; }
     .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); padding-top: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .footer-bottom p { font-size: 12px; }
-    /* FIX contrast: disclaimer upgraded from .45 to .7 */
-    .disclaimer { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: 10px 14px; font-size: 11.5px; color: rgba(255,255,255,.7); margin-top: 20px; line-height: 1.6; }
+    .disclaimer { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: 10px 14px; font-size: 11.5px; color: rgba(255,255,255,.45); margin-top: 20px; line-height: 1.6; }
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 768px) {
@@ -737,7 +726,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <div class="nav-logo">Fuel<span style="color:#93c5fd">Bill</span>.in</div>
+        <div class="nav-logo">Fuel<span style="color:#60a5fa">Bill</span>.in</div>
         <p>India's free <strong>fuel bill generator</strong> for office reimbursement. Create petrol &amp; diesel bills with Indian Oil, HP, Bharat Petroleum. Download petrol pump bill instantly — no signup required.</p>
       </div>
       <div>
@@ -771,7 +760,7 @@
     </div>
     <div class="footer-bottom">
       <p>© 2025 FuelBill.in · Free Petrol, Diesel &amp; Food Bill Generator India</p>
-      <p style="color:rgba(255,255,255,.6); font-size:11px">fuel bill generator · fuel bill generator for office reimbursement · petrol bill generator · petrol pump bill book · petrol bill for reimbursement · diesel bill generator · travel reimbursement bill</p>
+      <p style="color:rgba(255,255,255,.35); font-size:11px">fuel bill generator · fuel bill generator for office reimbursement · petrol bill generator · petrol pump bill book · petrol bill for reimbursement · diesel bill generator · travel reimbursement bill</p>
     </div>
   </div>
 </footer>
@@ -790,18 +779,6 @@
     document.getElementById('mobileMenu').classList.remove('open');
   }
 </script>
-<script>
-  // Load splitbee analytics after idle — same pattern as GA to avoid TBT
-  window.addEventListener('load', function() {
-    var fn = function() {
-      var s = document.createElement('script');
-      s.src = 'https://cdn.splitbee.io/sb.js';
-      s.async = true;
-      document.head.appendChild(s);
-    };
-    if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout: 5000 });
-    else setTimeout(fn, 4000);
-  });
-</script>
+<script>window.addEventListener('load',function(){var s=document.createElement('script');s.src='https://cdn.splitbee.io/sb.js';s.async=true;document.head.appendChild(s);});</script>
 </body>
 </html>
