@@ -142,6 +142,41 @@
       .hamburger { display: flex; }
     }
 
+    /* ── BOOKMARK BUTTON ── */
+    .btn-bookmark {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #fff8e1; color: #b45309;
+      font-size: 12px; font-weight: 700;
+      padding: 6px 12px; border-radius: 6px;
+      border: 1.5px solid #fcd34d;
+      cursor: pointer; transition: background .15s, border-color .15s;
+      white-space: nowrap; line-height: 1;
+    }
+    .btn-bookmark:hover { background: #fef3c7; border-color: #f59e0b; text-decoration: none; color: #92400e; }
+    .btn-bookmark.bookmarked { background: #ecfdf5; color: #065f46; border-color: #6ee7b7; }
+    @media (max-width: 768px) {
+      .btn-bookmark { font-size: 11px; padding: 5px 10px; gap: 4px; }
+    }
+
+    /* ── HOW TO GENERATE — MOBILE CARDS ── */
+    @media (max-width: 640px) {
+      .how-to-grid {
+        display: grid !important;
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+      }
+      .how-to-step {
+        background: var(--bg);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        padding: 16px 14px;
+        display: flex !important;
+        gap: 12px;
+        align-items: flex-start;
+        box-shadow: var(--shadow-sm);
+      }
+    }
+
     /* ── PAGE HEADER STRIP ── */
     .page-header-strip {
       background: var(--white);
@@ -521,6 +556,7 @@
       <li><a href="/#how-it-works">How It Works</a></li>
       <li><a href="/#faq">FAQ</a></li>
       <li><a href="/generator" class="nav-cta">Generate Bill →</a></li>
+      <li><button class="btn-bookmark" id="bookmarkBtn" onclick="bookmarkSite()" title="Bookmark FuelBill.in">🔖 Bookmark</button></li>
     </ul>
     <button class="hamburger" onclick="toggleMenu()" aria-label="Open navigation menu">
       <span></span><span></span><span></span>
@@ -536,6 +572,7 @@
   <a href="/#how-it-works" onclick="closeMenu()">How It Works</a>
   <a href="/#faq" onclick="closeMenu()">FAQ</a>
   <a href="/generator" class="m-cta" onclick="closeMenu()">⚡ Generate Fuel Bill →</a>
+  <button class="btn-bookmark" id="bookmarkBtnMobile" onclick="bookmarkSite()" style="margin-top:4px;width:100%;justify-content:center;">🔖 Bookmark This Site</button>
 </div>
 
 <!-- ══════ PAGE HEADER ══════ -->
@@ -675,16 +712,16 @@
 <div style="background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:32px 36px;margin-bottom:40px;">
   <h2 style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:6px;">How to Generate a Fuel Bill Online</h2>
   <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">Follow these simple steps to create your petrol or diesel receipt in seconds.</p>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
-    <div style="display:flex;gap:12px;align-items:flex-start;">
+  <div class="how-to-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+    <div class="how-to-step" style="display:flex;gap:12px;align-items:flex-start;">
       <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
       <div><div style="font-weight:700;font-size:13px;margin-bottom:3px;">Choose Template</div><div style="font-size:12px;color:var(--muted);">Pick between thermal FCC receipt or card swipe receipt style</div></div>
     </div>
-    <div style="display:flex;gap:12px;align-items:flex-start;">
+    <div class="how-to-step" style="display:flex;gap:12px;align-items:flex-start;">
       <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
       <div><div style="font-weight:700;font-size:13px;margin-bottom:3px;">Fill Your Details</div><div style="font-size:12px;color:var(--muted);">Enter station name, date, amount, vehicle number and more</div></div>
     </div>
-    <div style="display:flex;gap:12px;align-items:flex-start;">
+    <div class="how-to-step" style="display:flex;gap:12px;align-items:flex-start;">
       <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
       <div><div style="font-weight:700;font-size:13px;margin-bottom:3px;">Download Instantly</div><div style="font-size:12px;color:var(--muted);">Get a high-resolution PNG receipt with no watermark, free</div></div>
     </div>
@@ -761,6 +798,24 @@
 
   function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
   function closeMenu() { document.getElementById('mobileMenu').classList.remove('open'); }
+  function bookmarkSite() {
+    var url = 'https://fuelbill.in';
+    var title = 'FuelBill.in – Free Fuel & Food Bill Generator India';
+    var btns = document.querySelectorAll('#bookmarkBtn, #bookmarkBtnMobile');
+    if (window.sidebar && window.sidebar.addPanel) {
+      window.sidebar.addPanel(title, url, '');
+    } else if (window.external && ('AddFavorite' in window.external)) {
+      window.external.AddFavorite(url, title);
+    } else {
+      var msg = navigator.userAgent.indexOf('Mac') !== -1
+        ? 'Press ⌘+D to bookmark!'
+        : 'Press Ctrl+D to bookmark!';
+      btns.forEach(function(b){ b.textContent = '✓ ' + msg; b.classList.add('bookmarked'); });
+      setTimeout(function(){ btns.forEach(function(b){ b.innerHTML='🔖 Bookmark'; b.classList.remove('bookmarked'); }); }, 3500);
+      return;
+    }
+    btns.forEach(function(b){ b.innerHTML='✓ Bookmarked!'; b.classList.add('bookmarked'); });
+  }
 </script>
 
 
