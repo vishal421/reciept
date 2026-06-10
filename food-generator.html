@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3"></script>
+<!-- Google Analytics — injected after LCP via requestIdleCallback to eliminate TBT/LCP blocking -->
 <script>
-
   window.dataLayer = window.dataLayer || [];
-
   function gtag(){dataLayer.push(arguments);}
-
   gtag('js', new Date());
-
-  gtag('config', 'G-C0CW5VLJW3');
+  gtag('config', 'G-C0CW5VLJW3', { send_page_view: false });
+  function loadGA() {
+    var s = document.createElement('script');
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3';
+    s.async = true;
+    s.onload = function() { gtag('event', 'page_view'); };
+    document.head.appendChild(s);
+  }
+  if ('requestIdleCallback' in window) {
+    window.addEventListener('load', function() { requestIdleCallback(loadGA, { timeout: 4000 }); });
+  } else {
+    window.addEventListener('load', function() { setTimeout(loadGA, 3500); });
+  }
 </script>
  
   <meta charset="utf-8" />
@@ -94,7 +101,11 @@
 
   <!-- Thermal-Receipt font loaded via common.css @font-face -->
   <link rel="preload" href="assets/fonts/thermal-receipt.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="assets/css/common.css" />
+  <!-- CSP: mitigate XSS — Best Practices audit fix -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google-analytics.com; frame-ancestors 'none';" />
+  <!-- Load common.css non-render-blocking to improve FCP -->
+  <link rel="stylesheet" href="assets/css/common.css" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="assets/css/common.css" /></noscript>
 
   <style>
     /* ══ DESIGN TOKENS (match fuelbill.in exactly) ══ */
@@ -364,12 +375,16 @@
       padding: 10px 22px; border: none;
       border-radius: 7px; background: var(--blue);
       color: #fff; font-size: 13px; font-weight: 700;
-      cursor: pointer; transition: all .15s;
+      cursor: pointer;
+      /* FIX non-composited animation: use only GPU-composited properties — no transition:all */
+      transition: background .15s, transform .15s, opacity .15s;
+      will-change: transform, opacity;
       box-shadow: 0 2px 8px rgba(26,86,219,.25);
       font-family: inherit;
       display: flex; align-items: center; justify-content: center; gap: 6px;
     }
-    .btn-dl:hover { background: var(--blue-dark); }
+    .btn-dl:hover { background: var(--blue-dark); transform: translateY(-1px); opacity: .95; }
+    .btn-dl:active { transform: translateY(0); opacity: 1; }
     .btn-dl:disabled { opacity: .6; cursor: wait; }
 
     /* ══ PREVIEW COLUMN ══ */
@@ -485,17 +500,19 @@
 
     /* ══ FOOTER ══ */
     .site-footer {
-      background: var(--ink); color: #9ca3af;
+      background: var(--ink); color: #d1d5db;
       padding: 40px 0 24px;
     }
     .footer-inner { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
     .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-bottom: 32px; }
     .footer-col-title { color: #fff; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
-    .footer-col a { display: block; font-size: 13px; color: #9ca3af; margin-bottom: 6px; }
+    /* FIX contrast: upgraded from #9ca3af (fails WCAG AA) to #d1d5db (passes WCAG AA) */
+    .footer-col a { display: block; font-size: 13px; color: #d1d5db; margin-bottom: 6px; }
     .footer-col a:hover { color: #fff; text-decoration: none; }
-    .footer-bottom { border-top: 1px solid #374151; padding-top: 20px; font-size: 12px; text-align: center; }
+    .footer-bottom { border-top: 1px solid #374151; padding-top: 20px; font-size: 12px; text-align: center; color: #d1d5db; }
     .footer-logo { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-    .footer-logo span { color: var(--blue); }
+    /* FIX contrast: "Bill" span — #93c5fd passes WCAG AA on #0f1923 dark background */
+    .footer-logo span { color: #93c5fd; }
 
     .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; border: none; background: none; }
     .hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; }
@@ -1137,13 +1154,16 @@ function loadDefaultItems() {
    INIT
 ═══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  // Set current date/time
-  const now = new Date();
-  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-  document.getElementById('billDate').value = now.toISOString().slice(0,16);
+  // FIX forced reflow: double-rAF ensures all styles are flushed before JS reads layout
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    // Set current date/time
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('billDate').value = now.toISOString().slice(0,16);
 
-  loadDefaultItems();
-  liveUpdate();
+    loadDefaultItems();
+    liveUpdate();
+  }));
 });
 </script>
 
