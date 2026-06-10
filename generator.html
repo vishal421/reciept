@@ -1,33 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google Analytics — loaded after LCP is painted & page is idle to eliminate render-blocking and TBT impact -->
+<!-- Google tag (gtag.js) — loaded after LCP with partytown-like defer pattern -->
 <script>
-  // Queue gtag calls so analytics events are never lost even before the script loads
+  // Delay GTM until after page is interactive to avoid blocking LCP/TBT
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-C0CW5VLJW3', { send_page_view: false });
-
-  // Inject the GA script only after the browser has painted LCP and is idle
-  // Uses requestIdleCallback (with setTimeout fallback) after the load event
-  // This eliminates the 780 ms element render delay caused by GTM main-thread blocking
-  function loadGA() {
-    var s = document.createElement('script');
-    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3';
-    s.async = true;
-    s.onload = function() { gtag('event', 'page_view'); };
-    document.head.appendChild(s);
-  }
-  if ('requestIdleCallback' in window) {
-    window.addEventListener('load', function() {
-      requestIdleCallback(loadGA, { timeout: 4000 });
-    });
-  } else {
-    window.addEventListener('load', function() {
-      setTimeout(loadGA, 3500);
-    });
-  }
+  gtag('config', 'G-C0CW5VLJW3');
+  // Load GTM script after page load to prevent render blocking
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      var s = document.createElement('script');
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3';
+      s.async = true;
+      document.head.appendChild(s);
+    }, 2000); // 2s delay — fires after LCP, preserves all analytics events
+  });
 </script>
 
   <meta charset="utf-8" />
@@ -75,15 +64,9 @@
   <!-- Preload default LCP background texture so it's discoverable immediately -->
   <link rel="preload" href="assets/images/textures/texture-1.jpeg" as="image" fetchpriority="high" />
   <!-- Preload default pump logo to prevent CLS from unsized image -->
-  <link rel="preload" href="assets/images/logos/pump-logo-indian-oil.png" as="image" fetchpriority="high" width="90" height="70" />
-  <!-- Preload first-party JS bundles so they're available as soon as DOM is ready -->
-  <link rel="preload" href="assets/js/common.js" as="script" />
-  <link rel="preload" href="templates/AbstractTemplate.js" as="script" />
-  <link rel="preload" href="templates/template-1/Template1.js" as="script" />
+  <link rel="preload" href="assets/images/logos/pump-logo-indian-oil.png" as="image" fetchpriority="high" />
   <link rel="stylesheet" href="assets/css/common.css" media="print" onload="this.media='all'" />
   <noscript><link rel="stylesheet" href="assets/css/common.css" /></noscript>
-  <!-- CSP: Best Practices — mitigate XSS. Adjust script-src if you add more external scripts. -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://www.google-analytics.com; frame-ancestors 'none';" />
 
   <style>
     /* ── DESIGN TOKENS (match index.html exactly) ── */
@@ -218,16 +201,8 @@
 
     /* Reserve explicit space for dynamically-populated sections to prevent CLS */
     #section-paper-texture .sec-card-body { min-height: 52px; contain: layout; }
-    /* FIX CLS: Reserve exact space matching the pump logo image (90×70) plus padding */
-    #section-pump-logo .sec-card-body     { min-height: 100px; contain: layout; }
+    #section-pump-logo .sec-card-body     { min-height: 52px; contain: layout; }
     #section-optional-fields .sec-card-body { min-height: 52px; contain: layout; }
-    /* FIX CLS: section-data .info-block and .row reserve space before JS populates fields */
-    #section-data .sec-card-body          { min-height: 120px; contain: layout; }
-    #section-data .row                    { min-height: 80px; }
-    /* FIX CLS: Pump logo img MUST have explicit width+height — prevents unsized-image shift */
-    #pumpLogo { width: 90px; height: 70px; object-fit: contain; display: inline-block; }
-    /* Ensure all logo-tile images have stable dimensions */
-    .logo-tile img { width: 90px; height: 70px; object-fit: contain; flex-shrink: 0; }
 
     /* ── Template selector – same pill style as texture ── */
     .tpl-grid { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -324,14 +299,12 @@
       color: #fff; font-size: 13px; font-weight: 600;
       cursor: pointer;
       box-shadow: 0 2px 8px rgba(26,86,219,.25);
-      /* ONLY GPU-composited properties: opacity + transform — letter-spacing removed */
+      /* Use transform for GPU-composited hover instead of letter-spacing */
       transition: background .15s, transform .15s, opacity .15s;
-      will-change: transform, opacity;
-      /* Prevent non-composited animation warning */
-      contain: paint;
+      will-change: transform;
     }
-    .btn-download:hover { background: var(--blue-dark); transform: translateY(-1px); opacity: .95; }
-    .btn-download:active { transform: translateY(0); opacity: 1; }
+    .btn-download:hover { background: var(--blue-dark); transform: translateY(-1px); }
+    .btn-download:active { transform: translateY(0); }
 
     /* ── PREVIEW COLUMN ── */
     .preview-col {
@@ -352,53 +325,52 @@
       gap: 4px;
     }
 
-    /* FIX texture-3 black: filter on #template-container creates an isolated compositing layer
-       which breaks mix-blend-mode inside templates (blends against transparent/black backdrop).
-       Shadow moved to .preview-scale-wrapper which is OUTSIDE the template content. */
+    /* FIX: Use transform:scale with GPU compositing for crisp rendering.
+       Reserve space upfront so wrapper doesn't cause layout shift. */
     .preview-scale-wrapper {
       width: 295px;
+      /* Reserve minimum height to prevent CLS while template loads */
       min-height: 480px;
       contain: layout;
-      /* Drop shadow on wrapper — does NOT affect blend modes inside template */
-      filter: drop-shadow(0 8px 28px rgba(0,0,0,.18));
     }
     #template-container {
       display: block;
       min-height: 480px;
       transform: rotate(-0.3deg) scale(0.85);
       transform-origin: top center;
-      /* NO filter here — keeps stacking context clean so mix-blend-mode works on all textures */
-      will-change: transform;
-      /* isolation: auto ensures blend modes composite against the white paper background */
-      isolation: auto;
+      filter: drop-shadow(0 8px 28px rgba(0,0,0,.18));
+      /* GPU layer for composited rendering — prevents CLS & jank */
+      will-change: contents;
     }
 
     /* ── MOBILE: full responsive layout ── */
     @media (max-width: 900px) {
       .gen-layout {
         grid-template-columns: 1fr;
+        /* Show preview BELOW controls on mobile */
       }
       .preview-col {
         position: static;
-        order: -1;
+        order: -1; /* Move preview to top on mobile for better UX */
         margin-bottom: 8px;
       }
       #template-container {
+        /* Scale up to fill mobile width: ~360px viewport, template=295px → scale≈1.08 */
         transform: rotate(-0.3deg) scale(1.08);
         transform-origin: top center;
       }
       .preview-scale-wrapper {
         width: 100%;
         max-width: 340px;
+        /* Taller reserve to prevent CLS on mobile */
         min-height: 560px;
-        /* Keep shadow on wrapper only */
-        filter: drop-shadow(0 6px 20px rgba(0,0,0,.15));
       }
       .preview-card { padding: 12px; }
     }
 
     @media (max-width: 480px) {
       #template-container {
+        /* Slightly smaller scale for very small phones */
         transform: rotate(-0.3deg) scale(0.95);
         transform-origin: top center;
       }
@@ -407,25 +379,24 @@
         min-height: 480px;
       }
       .data-field-group input[type=text] {
-        font-size: 16px;
+        font-size: 16px; /* Prevent iOS zoom on input focus */
       }
     }
 
     /* ── FOOTER ── */
     .site-footer {
-      background: var(--ink); color: #d1d5db;
+      background: var(--ink); color: #9ca3af;
       padding: 40px 0 24px; margin-top: 0;
     }
     .footer-inner { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
     .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; margin-bottom: 32px; }
     .footer-col-title { color: #fff; font-size: 13px; font-weight: 700; margin-bottom: 12px; }
-    /* FIX contrast: upgraded from #9ca3af (4.0:1) to #d1d5db (7.0:1) on dark bg — WCAG AA pass */
-    .footer-col a { display: block; font-size: 13px; color: #d1d5db; margin-bottom: 6px; }
+    .footer-col a { display: block; font-size: 13px; color: #9ca3af; margin-bottom: 6px; }
     .footer-col a:hover { color: #fff; text-decoration: none; }
-    .footer-bottom { border-top: 1px solid #374151; padding-top: 20px; font-size: 12px; text-align: center; color: #d1d5db; }
+    .footer-bottom { border-top: 1px solid #374151; padding-top: 20px; font-size: 12px; text-align: center; }
     .footer-logo { font-size: 17px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-    /* FIX contrast: "Bill" span — use bright blue #93c5fd (passes WCAG AA on #0f1923) */
-    .footer-logo span { color: #93c5fd; }
+    /* FIX: contrast issue — "Bill" span was too low contrast. Use a lighter blue. */
+    .footer-logo span { color: #60a5fa; }
 
     @media(max-width:900px){
       .footer-grid { grid-template-columns: 1fr; }
@@ -647,38 +618,9 @@
     </div>
 
     <!-- Step 3: Pump Logo -->
-    <!-- FIX CLS: pre-render placeholder tiles so section has stable height before JS runs -->
     <div class="sec-card" id="section-pump-logo">
       <div class="sec-card-head"><div class="step-badge">3</div>Select Pump Logo</div>
-      <div class="sec-card-body">
-        <div class="logo-tiles" id="pump-logo-placeholder" aria-hidden="true">
-          <label class="logo-tile">
-            <input type="radio" name="pumpLogo" value="indian-oil" checked />
-            <!-- Explicit width+height on img prevents unsized-image CLS -->
-            <img src="assets/images/logos/pump-logo-indian-oil.png" id="pumpLogo"
-                 width="90" height="70" alt="Indian Oil pump logo"
-                 style="display:inline-block;width:90px;height:70px;object-fit:contain;"
-                 fetchpriority="high" decoding="async" />
-            Indian Oil
-          </label>
-          <label class="logo-tile">
-            <input type="radio" name="pumpLogo" value="hp-oil" />
-            <img src="assets/images/logos/pump-logo-hp.png"
-                 width="90" height="70" alt="HP pump logo"
-                 style="display:inline-block;width:90px;height:70px;object-fit:contain;"
-                 loading="lazy" decoding="async" />
-            HP Oil
-          </label>
-          <label class="logo-tile">
-            <input type="radio" name="pumpLogo" value="bharat-petroleum" />
-            <img src="assets/images/logos/pump-logo-bharat-petroleum.png"
-                 width="90" height="70" alt="Bharat Petroleum pump logo"
-                 style="display:inline-block;width:90px;height:70px;object-fit:contain;"
-                 loading="lazy" decoding="async" />
-            Bharat Petroleum
-          </label>
-        </div>
-      </div>
+      <div class="sec-card-body"></div>
     </div>
 
     <!-- Step 4: Optional Fields -->
@@ -713,9 +655,7 @@
         <span style="font-size:11px;color:#15803d;font-weight:600;text-transform:none;">● Updates instantly</span>
       </div>
       <div class="preview-scale-wrapper">
-        <!-- FIX LCP element render delay: inline skeleton painted immediately in CSS,
-             JS replaces it once templates load — eliminates 780ms render delay -->
-        <div id="template-container" style="min-height:480px;background:url('assets/images/textures/texture-1.jpeg') center/cover #f8f5f0;border-radius:4px;isolation:auto;"></div>
+        <div id="template-container"></div>
       </div>
     </div>
 
@@ -731,127 +671,23 @@
 
 </div><!-- /gen-layout -->
 
-<!-- ══════ HOW TO GENERATE SECTION ══════ -->
-<style>
-  .how-section {
-    background: var(--white);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 28px 32px 32px;
-    margin-bottom: 40px;
-  }
-  .how-section h2 {
-    font-size: 20px; font-weight: 800;
-    color: var(--ink); margin-bottom: 4px;
-  }
-  .how-section .how-sub {
-    font-size: 13px; color: var(--muted); margin-bottom: 24px;
-  }
-  /* Desktop: 3 columns side by side */
-  .how-steps {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-  .how-step-card {
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 20px 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    position: relative;
-  }
-  .how-step-card .step-num {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    background: var(--blue);
-    color: #fff;
-    font-weight: 800; font-size: 15px;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .how-step-card .step-emoji {
-    font-size: 26px; line-height: 1;
-  }
-  .how-step-card .step-title {
-    font-weight: 700; font-size: 14px;
-    color: var(--ink); margin-bottom: 2px;
-  }
-  .how-step-card .step-desc {
-    font-size: 12.5px; color: var(--muted); line-height: 1.6;
-  }
-  /* Connector arrow between cards on desktop */
-  .how-step-card:not(:last-child)::after {
-    content: '→';
-    position: absolute;
-    right: -14px; top: 50%;
-    transform: translateY(-50%);
-    font-size: 18px; color: var(--blue);
-    font-weight: 700; z-index: 1;
-  }
-  /* Mobile: stack cards vertically with a down-arrow connector */
-  @media (max-width: 640px) {
-    .how-section { padding: 20px 16px 24px; }
-    .how-steps {
-      grid-template-columns: 1fr;
-      gap: 0;
-    }
-    .how-step-card {
-      flex-direction: row;
-      align-items: flex-start;
-      gap: 14px;
-      border-radius: 0;
-      border-bottom: none;
-      padding: 16px 14px;
-    }
-    .how-step-card:first-child { border-radius: 10px 10px 0 0; }
-    .how-step-card:last-child  { border-radius: 0 0 10px 10px; border-bottom: 1px solid var(--line); }
-    .how-step-card .step-emoji { display: none; }
-    /* Replace right arrow with down arrow on mobile */
-    .how-step-card:not(:last-child)::after {
-      content: '↓';
-      right: auto; top: auto;
-      left: 50%; bottom: -14px;
-      transform: translateX(-50%);
-      font-size: 16px;
-    }
-  }
-</style>
-
-<div class="how-section">
-  <h2>How to Generate a Fuel Bill Online</h2>
-  <p class="how-sub">Follow these simple steps to create your petrol or diesel receipt in seconds.</p>
-  <div class="how-steps">
-
-    <div class="how-step-card">
-      <div class="step-emoji">🧾</div>
-      <div class="step-num">1</div>
-      <div>
-        <div class="step-title">Choose Template</div>
-        <div class="step-desc">Pick between thermal FCC receipt or card swipe receipt style — 8 templates available.</div>
-      </div>
+<!-- ══════ SEO CONTENT SECTION ══════ -->
+<div style="background:var(--white);border:1px solid var(--line);border-radius:var(--radius);padding:32px 36px;margin-bottom:40px;">
+  <h2 style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:6px;">How to Generate a Fuel Bill Online</h2>
+  <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">Follow these simple steps to create your petrol or diesel receipt in seconds.</p>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+      <div><div style="font-weight:700;font-size:13px;margin-bottom:3px;">Choose Template</div><div style="font-size:12px;color:var(--muted);">Pick between thermal FCC receipt or card swipe receipt style</div></div>
     </div>
-
-    <div class="how-step-card">
-      <div class="step-emoji">✏️</div>
-      <div class="step-num">2</div>
-      <div>
-        <div class="step-title">Fill Your Details</div>
-        <div class="step-desc">Enter station name, date, amount, vehicle number, pump logo and more.</div>
-      </div>
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+      <div><div style="font-weight:700;font-size:13px;margin-bottom:3px;">Fill Your Details</div><div style="font-size:12px;color:var(--muted);">Enter station name, date, amount, vehicle number and more</div></div>
     </div>
-
-    <div class="how-step-card">
-      <div class="step-emoji">⬇️</div>
-      <div class="step-num">3</div>
-      <div>
-        <div class="step-title">Download Instantly</div>
-        <div class="step-desc">Get a high-resolution PNG receipt with no watermark, completely free.</div>
-      </div>
+    <div style="display:flex;gap:12px;align-items:flex-start;">
+      <div style="width:32px;height:32px;border-radius:50%;background:var(--blue-light);color:var(--blue);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+      <div><div style="font-weight:700;font-size:13px;margin-bottom:3px;">Download Instantly</div><div style="font-size:12px;color:var(--muted);">Get a high-resolution PNG receipt with no watermark, free</div></div>
     </div>
-
   </div>
 </div>
 
@@ -864,7 +700,7 @@
     <div class="footer-grid">
       <div class="footer-col">
         <div class="footer-logo">Fuel<span>Bill</span>.in</div>
-        <!-- FIX contrast: upgraded footer text to #d1d5db for WCAG AA on dark background -->
+        <!-- FIX: contrast — lightened footer text for WCAG AA compliance -->
         <p style="font-size:13px;margin-bottom:0;color:#d1d5db;">India's free fuel bill generator. Create realistic petrol and diesel receipts instantly.</p>
       </div>
       <div class="footer-col">
@@ -887,50 +723,17 @@
   </div>
 </footer>
 
-<!-- Core scripts: load common + abstract + default template (Template1) with defer -->
+<!-- Libraries — defer all template scripts so they don't block rendering -->
 <script src="assets/js/common.js" defer></script>
 <script src="templates/AbstractTemplate.js" defer></script>
 <script src="templates/template-1/Template1.js" defer></script>
-
-<!-- FIX TBT: Remaining templates loaded lazily after page is idle.
-     This reduces unused JS parse time and lowers Total Blocking Time.
-     They are injected dynamically once the browser is idle or on first user interaction. -->
-<script>
-  (function() {
-    var lazyTemplates = [
-      'templates/template-2/Template2.js',
-      'templates/template-3/Template3.js',
-      'templates/template-4/Template4.js',
-      'templates/template-5/Template5.js',
-      'templates/template-6/Template6.js',
-      'templates/template-7/Template7.js',
-      'templates/template-8/Template8.js',
-    ];
-    var loaded = false;
-    function loadLazyTemplates() {
-      if (loaded) return;
-      loaded = true;
-      lazyTemplates.forEach(function(src) {
-        var s = document.createElement('script');
-        s.src = src;
-        s.defer = true;
-        document.body.appendChild(s);
-      });
-    }
-    // Load on idle after page paints, or immediately on first template selector interaction
-    if ('requestIdleCallback' in window) {
-      window.addEventListener('load', function() {
-        requestIdleCallback(loadLazyTemplates, { timeout: 3000 });
-      });
-    } else {
-      window.addEventListener('load', function() { setTimeout(loadLazyTemplates, 2000); });
-    }
-    // Also load immediately if user interacts with template selector before idle fires
-    document.addEventListener('change', function(e) {
-      if (e.target && e.target.name === 'template') loadLazyTemplates();
-    }, { once: true, capture: true });
-  })();
-</script>
+<script src="templates/template-2/Template2.js" defer></script>
+<script src="templates/template-3/Template3.js" defer></script>
+<script src="templates/template-4/Template4.js" defer></script>
+<script src="templates/template-5/Template5.js" defer></script>
+<script src="templates/template-6/Template6.js" defer></script>
+<script src="templates/template-7/Template7.js" defer></script>
+<script src="templates/template-8/Template8.js" defer></script>
 
 <script defer>
   document.addEventListener('DOMContentLoaded', async function () {
@@ -946,24 +749,13 @@
     ];
     window.templates = templates;
 
-    // FIX forced reflow: use requestAnimationFrame to batch all DOM reads before writes
-    // This prevents JavaScript from querying geometric properties (offsetWidth etc.)
-    // immediately after style invalidation, which causes the 70ms unattributed reflow.
-    await new Promise(function(resolve) {
-      requestAnimationFrame(function() {
-        requestAnimationFrame(resolve); // double-rAF ensures styles are flushed first
-      });
-    });
-
     await onInit();
     document.querySelectorAll('input[name="template"]').forEach(function(el) {
       el.addEventListener('change', async function () {
-        requestAnimationFrame(async function() { await onTemplateSelected(); });
+        await onTemplateSelected();
       });
     });
-    document.getElementById('loadDefaultData').addEventListener('click', async function () {
-      requestAnimationFrame(async function() { await onTemplateSelected(); });
-    });
+    document.getElementById('loadDefaultData').addEventListener('click', async function () { await onTemplateSelected(); });
     document.getElementById('downloadButton').addEventListener('click', function () { downloadReceipt(); });
   });
 
