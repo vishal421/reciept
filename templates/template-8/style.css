@@ -1,0 +1,151 @@
+/* ========== TEMPLATE 8 – IndianOil Xtra Premium (Guruprasad Services, Malad Mumbai) ========== */
+
+.t8-hdfc-wrap {
+  display: flex;
+  flex-direction: row;
+  width: 295px;
+  min-height: 760px;
+  position: relative;
+  background-color: #ffffff;
+  background-image: url('../../assets/images/textures/texture-3.jpeg');
+  background-repeat: repeat;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.zig-zag-top-bottom {
+  --m: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg)
+      bottom/6px 52% repeat-x,
+    conic-gradient(from 135deg at top, #0000, #000 1deg 89deg, #0000 90deg)
+      top/6px 52% repeat-x;
+  -webkit-mask: var(--m);
+  mask: var(--m);
+}
+
+.t8-hdfc-wrap .template-content {
+  flex: 1;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 20px 10px 18px 14px;
+  font-size: 11px;
+  color: #1a1209;
+  line-height: 1.6;
+  -webkit-font-smoothing: none;
+  text-rendering: optimizeSpeed;
+  font-weight: normal;
+  filter: blur(0.12px) opacity(0.9);
+  letter-spacing: 0.15px;
+  z-index: 2;
+  position: relative;
+}
+
+.t8-hdfc-wrap .template-content * {
+  font-weight: normal !important;
+}
+
+.t8-hdfc-wrap .template-content .bold-row .data,
+.t8-hdfc-wrap .template-content .bold-row .label {
+  font-weight: bold !important;
+}
+
+
+/* Logo */
+.t8-hdfc-wrap .pump-logo {
+  text-align: center;
+  padding: 16px 0 6px;
+  width: 100%;
+  display: block;
+}
+
+.t8-hdfc-wrap .pump-logo img {
+  display: inline-block;
+  max-width: 74px;
+  max-height: 60px;
+  object-fit: contain;
+  filter: grayscale(100%) contrast(0.62) brightness(0.82);
+  opacity: 0.72;
+  mix-blend-mode: multiply;
+}
+
+.t8-hdfc-wrap .center { text-align: center; }
+
+.t8-welcomes {
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 2px 0 1px;
+}
+
+.t8-hdfc-wrap .station-name {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  padding: 1px 0;
+  text-transform: uppercase;
+}
+
+.t8-hdfc-wrap .station-address {
+  font-size: 10px;
+  opacity: 0.82;
+  padding: 1px 0;
+  text-transform: uppercase;
+}
+
+.t8-hdfc-wrap .tel-line {
+  font-size: 10px;
+  opacity: 0.78;
+  padding: 1px 0;
+}
+
+.t8-gap {
+  height: 8px;
+}
+
+.t8-datetime {
+  font-size: 11px;
+  opacity: 0.85;
+  padding: 1px 0;
+}
+
+.t8-hdfc-wrap .info-block {
+  margin: 1px 0;
+}
+
+.t8-hdfc-wrap .line-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 1.5px;
+  font-size: 11px;
+}
+
+.t8-hdfc-wrap .line-item > .label {
+  flex: 0 0 92px;
+  font-size: 11px;
+  opacity: 0.78;
+  color: #1a1209;
+  background: none;
+  border-radius: 0;
+  padding: 0;
+  display: inline;
+  font-weight: normal !important;
+  line-height: inherit;
+}
+
+.t8-hdfc-wrap .line-item > .sep {
+  flex: 0 0 10px;
+  text-align: center;
+  opacity: 0.6;
+}
+
+.t8-hdfc-wrap .line-item > .data {
+  flex: 1;
+  word-break: break-all;
+  font-size: 11px;
+  font-weight: normal !important;
+  color: #1a1209;
+}
+
+.t8-hdfc-wrap .footer {
+  text-align: center;
+  font-size: 10px;
+  opacity: 0.62;
+  padding: 10px 0 18px;
+  letter-spacing: 0.2px;
+}
