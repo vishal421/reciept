@@ -1,0 +1,132 @@
+/* ========== TEMPLATE 9 – IndianOil Om Sai Physical Receipt ========== */
+
+.t9-wrap {
+  width: 295px;
+  min-height: 700px;
+  position: relative;
+  background-color: #f5f0e8;
+  background-image: url('../../assets/images/textures/texture-1.jpeg');
+  background-repeat: repeat;
+  background-size: cover;
+  background-blend-mode: multiply;
+  overflow: hidden;
+  font-family: 'Thermal-Receipt', 'Courier New', monospace;
+  font-size: 10.5px;
+  color: #1a1a1a;
+  line-height: 1.55;
+  -webkit-font-smoothing: none;
+  text-rendering: optimizeSpeed;
+}
+
+/* Inner content - full width now that HDFC strips are removed */
+.t9-content {
+  margin: 0;
+  padding: 16px 14px 20px;
+  position: relative;
+  z-index: 2;
+}
+
+/* Logo area */
+.t9-logo-wrap {
+  text-align: center;
+  padding: 10px 0 6px;
+}
+.t9-logo-wrap img {
+  max-width: 72px;
+  max-height: 56px;
+  object-fit: contain;
+  filter: grayscale(100%) contrast(0.75) brightness(0.8);
+  opacity: 0.8;
+  mix-blend-mode: multiply;
+  display: inline-block;
+}
+.t9-brand-hindi {
+  font-size: 11px;
+  font-family: 'Noto Sans Devanagari', Arial, sans-serif;
+  color: #222;
+  margin-top: 2px;
+  letter-spacing: 1px;
+}
+.t9-brand-en {
+  font-size: 13px;
+  font-weight: bold;
+  color: #111;
+  letter-spacing: 2px;
+  margin-top: 1px;
+}
+
+/* Dividers */
+.t9-divider {
+  border-top: 1px dashed #888;
+  margin: 7px 0;
+}
+
+/* Station info */
+.t9-station-name {
+  font-size: 11.5px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  color: #111;
+}
+.t9-station-id {
+  font-size: 10px;
+  color: #333;
+}
+.t9-address {
+  font-size: 9.5px;
+  color: #333;
+  margin: 1px 0;
+}
+.t9-mob {
+  font-size: 9.5px;
+  color: #333;
+  margin-bottom: 2px;
+}
+.t9-lbl {
+  color: #333;
+  font-weight: normal;
+}
+
+/* Data rows */
+.t9-row {
+  display: flex;
+  gap: 0;
+  font-size: 10px;
+  color: #1a1a1a;
+  padding: 0.5px 0;
+}
+.t9-row .t9-lbl {
+  width: 58px;
+  flex-shrink: 0;
+  font-size: 10px;
+}
+.t9-row .t9-sep {
+  width: 10px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.t9-row .t9-val {
+  flex: 1;
+  word-break: break-all;
+}
+.t9-row-bold .t9-lbl,
+.t9-row-bold .t9-val {
+  font-weight: bold;
+  font-size: 10.5px;
+}
+
+/* Footer */
+.t9-footer-msg {
+  text-align: center;
+  font-size: 10px;
+  color: #222;
+  letter-spacing: 0.5px;
+}
+.t9-gvr {
+  text-align: left;
+  font-size: 9.5px;
+  color: #444;
+  margin-top: 10px;
+}
+
+.center { text-align: center; }
