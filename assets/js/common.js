@@ -3,7 +3,6 @@
    Handles: template switching, form rendering, live preview,
    zoom slider, and PNG download via server.
    ========================================================== */
-
 var templateIndex = 0;
 var template      = null;
 
@@ -56,6 +55,27 @@ function syncPreviewWrapperHeight() {
 }
 
 /* ----------------------------------------------------------
+   CLS FIX: Lock a card body's min-height to whatever it just
+   rendered at, BEFORE the next rebuild clears it back to an
+   empty state. Without this, every call to renderTemplateForm
+   does innerHTML = '' (collapsing the box back toward the CSS
+   floor) and then re-populates it a moment later — on slow
+   devices/connections that collapse-then-regrow is visible and
+   contributes to layout shift on top of the floor being too low
+   to begin with. This keeps the box at least as tall as the
+   tallest content it has ever shown, so it can grow but never
+   visibly collapses.
+   ---------------------------------------------------------- */
+function lockSectionHeight(body) {
+  if (!body) return;
+  var rendered = body.getBoundingClientRect().height;
+  var currentMin = parseFloat(body.style.minHeight) || 0;
+  if (rendered > currentMin) {
+    body.style.minHeight = rendered + 'px';
+  }
+}
+
+/* ----------------------------------------------------------
    Build the four dynamic panels from template config
    ---------------------------------------------------------- */
 function renderTemplateForm(tmpl) {
@@ -80,6 +100,8 @@ function renderTemplateForm(tmpl) {
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       texBody.appendChild(lbl);
     });
+    // CLS FIX: lock this card's height to what it just rendered at
+    lockSectionHeight(texBody);
   }
 
   /* ── Pump Logo ── */
@@ -101,6 +123,8 @@ function renderTemplateForm(tmpl) {
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       logoBody.appendChild(lbl);
     });
+    // CLS FIX: lock this card's height to what it just rendered at
+    lockSectionHeight(logoBody);
   }
 
   /* ── Optional Fields ── */
@@ -121,6 +145,8 @@ function renderTemplateForm(tmpl) {
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       optBody.appendChild(lbl);
     });
+    // CLS FIX: lock this card's height to what it just rendered at
+    lockSectionHeight(optBody);
   }
 
   /* ── Data Fields ── */
@@ -234,8 +260,6 @@ function downloadReceipt() {
 
 /* ----------------------------------------------------------
    PDF Download  — POST outerHTML to /api/download-receipt-pdf
-   FIX: This function was missing entirely — PDF button had no
-   handler. Added here with same pattern as PNG download.
    Single-page, high-quality output is handled server-side via
    Puppeteer with deviceScaleFactor:2 and exact element sizing.
    ---------------------------------------------------------- */
@@ -249,8 +273,6 @@ function downloadReceiptPdf() {
   btn.textContent = '⏳ Generating PDF…';
 
   // Temporarily remove CSS transform so we capture true unscaled dimensions.
-  // This is critical — offsetWidth/Height are layout-box dimensions, unaffected
-  // by transform, but we store and restore to keep visual state consistent.
   var prevTransform = container.style.transform || '';
   container.style.transform = 'none';
 
