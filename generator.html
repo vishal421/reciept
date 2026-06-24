@@ -318,10 +318,30 @@
     }
     .sec-card-body { padding: 16px 18px; }
 
-    /* Reserve explicit space for dynamically-populated sections to prevent CLS */
+    /* Reserve explicit space for dynamically-populated sections to prevent CLS.
+       NOTE: #section-pump-logo's floor was raised from 52px -> 96px (CLS FIX v2).
+       52px only fit a single row of plain text pills. In practice this section
+       renders THREE logo-tile pills (icon + label each) which the .logo-tiles
+       flex row can wrap past one line on narrower bodies, PLUS — once a logo is
+       selected — the #pumpLogo preview <img> at 70px tall gets inserted beneath
+       the tiles. Real measured content here is taller than 52px on first paint,
+       so the box collapsed to the old floor and then visibly grew once JS
+       populated it — that was the dominant desktop CLS source (~0.216).
+       96px ≈ tile row (~38px) + pumpLogo img (70px) + body padding (32px),
+       budgeted generously since wrap behavior varies by font rendering.
+       Re-measure against the live DOM and tighten/loosen as needed. */
     #section-paper-texture .sec-card-body { min-height: 52px; contain: layout; }
-    #section-pump-logo .sec-card-body     { min-height: 52px; contain: layout; }
+    #section-pump-logo .sec-card-body     { min-height: 96px; contain: layout; }
     #section-optional-fields .sec-card-body { min-height: 52px; contain: layout; }
+
+    /* CLS FIX v2: on narrow phones the three logo-tile pills are far more
+       likely to wrap onto two lines (less horizontal room), so the floor
+       needs to be taller there too — otherwise this section still collapses
+       and regrows on first paint on small screens even though desktop/tablet
+       widths are now covered by the 96px floor above. */
+    @media (max-width: 480px) {
+      #section-pump-logo .sec-card-body { min-height: 140px; }
+    }
 
     /* Reserve explicit space for the pump-logo <img> swapped in by JS so it
        doesn't shift layout when the file loads (paired with width/height
