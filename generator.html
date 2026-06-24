@@ -331,7 +331,13 @@
        budgeted generously since wrap behavior varies by font rendering.
        Re-measure against the live DOM and tighten/loosen as needed. */
     #section-paper-texture .sec-card-body { min-height: 52px; contain: layout; }
-    #section-pump-logo .sec-card-body     { min-height: 96px; contain: layout; }
+    #section-pump-logo .sec-card-body {
+  min-height: 160px;   /* increased to prevent shift */
+  contain: layout;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
     #section-optional-fields .sec-card-body { min-height: 52px; contain: layout; }
 
     /* CLS FIX v2: on narrow phones the three logo-tile pills are far more
@@ -483,23 +489,11 @@
     /* FIX: Use transform:scale with GPU compositing for crisp rendering.
        Reserve space upfront so wrapper doesn't cause layout shift. */
     .preview-scale-wrapper {
-      width: 295px;
-      /* Reserve minimum height to prevent CLS while template loads.
-         Raised from 480px -> 620px: 480px was sized for the SCALED
-         (0.85x) container before #template-container's content
-         (receipt HTML + CSS) finishes loading async, and undershot
-         the real first-paint height on desktop. This is now a closer
-         static match to the actual rendered receipt height at 0.85
-         scale, so common.js's lockPreviewWrapperHeight() /
-         syncPreviewWrapperHeight() have to bridge a much smaller gap
-         instead of the full collapse-to-480-then-jump that desktop
-         was showing. Re-measure against your live default template
-         and adjust if it doesn't match exactly — this number should
-         be (template-1's natural unscaled height * 0.85), rounded up
-         a little for safety. */
-      min-height: 620px;
-      contain: layout;
-    }
+  width: 295px;
+  height: 700px;        /* FIXED height prevents CLS */
+  overflow: hidden;     /* stops expansion */
+  contain: layout;
+}
     }
     #template-container {
       display: block;
