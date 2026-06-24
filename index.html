@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="theme-color" content="#1a3a5c" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <link rel="preconnect" href="https://www.googletagmanager.com" />
+  <link rel="preconnect" href="https://www.google-analytics.com" />
+  <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
   <!-- Google Analytics — deferred for LCP performance -->
   <script>window.addEventListener('load',function(){var s=document.createElement('script');s.src='https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3';s.async=true;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-C0CW5VLJW3');});</script>
 
@@ -258,7 +261,7 @@
     }
     .tag-fuel { background: #dbeafe; color: var(--blue); }
     .tag-food { background: #fef3c7; color: var(--amber); }
-    .tool-card h3 { font-size: 17px; font-weight: 800; color: var(--ink); margin-bottom: 6px; letter-spacing: -0.3px; }
+    .tool-card h2 { font-size: 17px; font-weight: 800; color: var(--ink); margin-bottom: 6px; letter-spacing: -0.3px; }
     .tool-card p { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
     .tool-card-link {
       font-size: 13px; font-weight: 700; color: var(--blue);
@@ -286,7 +289,7 @@
     .logo-pill .dot { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #fff; }
     .dot-ioc { background: #cc2222; }
     .dot-hp  { background: #003f8a; }
-    .dot-bp  { background: #e8b800; color: #333; }
+    .logo-pill .dot.dot-bp { background: #e8b800; color: #333; }
     .dot-food { background: var(--amber); }
 
     /* ═══ SECTION UTILS ═══ */
@@ -371,20 +374,30 @@
     .seo-content p { margin-bottom: 11px; }
     .seo-content ul { padding-left: 20px; margin-bottom: 11px; }
     .seo-content li { margin-bottom: 4px; }
+    .seo-content a { text-decoration: underline; text-decoration-color: rgba(26,86,219,.45); text-underline-offset: 2px; }
+    .seo-content a:hover { text-decoration-color: var(--blue); }
+
+    /* ═══ SKIP LINK ═══ */
+    .skip-link {
+      position: absolute; left: -999px; top: 0;
+      background: var(--blue); color: #fff; font-weight: 700;
+      padding: 10px 16px; border-radius: 0 0 8px 0; z-index: 1000;
+    }
+    .skip-link:focus { left: 0; }
 
     /* ═══ FOOTER ═══ */
     footer { background: var(--ink); color: rgba(255,255,255,.7); padding: 44px 0 28px; font-size: 13px; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 36px; margin-bottom: 32px; }
     .footer-brand .nav-logo { color: #fff; font-size: 16px; margin-bottom: 10px; }
     .footer-brand p { font-size: 12.5px; line-height: 1.7; max-width: 260px; }
-    footer h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,.9); margin-bottom: 12px; }
+    footer h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,.9); margin-bottom: 12px; }
     footer ul { list-style: none; }
     footer li { margin-bottom: 8px; }
     footer a { color: rgba(255,255,255,.6); font-size: 13px; }
     footer a:hover { color: #fff; text-decoration: none; }
     .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); padding-top: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .footer-bottom p { font-size: 12px; }
-    .disclaimer { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: 10px 14px; font-size: 11.5px; color: rgba(255,255,255,.45); margin-top: 20px; line-height: 1.6; }
+    .disclaimer { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: 6px; padding: 10px 14px; font-size: 11.5px; color: rgba(255,255,255,.78); margin-top: 20px; line-height: 1.6; }
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 768px) {
@@ -434,6 +447,7 @@
   </script>
 </head>
 <body>
+<a href="#main-content" class="skip-link">Skip to main content</a>
 
 <!-- ═══ NAV ═══ -->
 <nav class="nav" aria-label="Main navigation">
@@ -468,6 +482,8 @@
   <button class="btn-bookmark" id="bookmarkBtnMobile" onclick="bookmarkSite()" style="margin-top:4px;width:100%;justify-content:center;">🔖 Bookmark This Site</button>
 </div>
 
+<main id="main-content">
+
 <!-- ═══ HERO ═══ -->
 <section class="hero" aria-labelledby="hero-heading">
   <div class="container">
@@ -494,7 +510,7 @@
       <a href="/generator" class="tool-card">
         <span class="tool-card-tag tag-fuel">Fuel</span>
         <div class="tool-card-icon">⛽</div>
-        <h3>Fuel Bill Generator</h3>
+        <h2>Fuel Bill Generator</h2>
         <p>Create petrol & diesel receipts with Indian Oil, HP or Bharat Petroleum logos — thermal & card payment styles.</p>
         <div class="tool-card-feats">
           <span class="feat-chip">Indian Oil</span>
@@ -507,7 +523,7 @@
       <a href="/food-bill" class="tool-card">
         <span class="tool-card-tag tag-food">Food</span>
         <div class="tool-card-icon">🍽️</div>
-        <h3>Food Bill Generator</h3>
+        <h2>Food Bill Generator</h2>
         <p>Create restaurant receipts with itemised billing, auto CGST & SGST calculation, service charge & paper textures.</p>
         <div class="tool-card-feats">
           <span class="feat-chip">CGST + SGST</span>
@@ -675,39 +691,39 @@
     </div>
     <div class="faq-list">
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">What is this fuel bill generator used for? <span class="faq-toggle">+</span></div>
+        <div class="faq-q" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this);}" role="button" tabindex="0" aria-expanded="false">What is this fuel bill generator used for? <span class="faq-toggle">+</span></div>
         <div class="faq-a">FuelBill.in generates petrol and diesel bills for personal record keeping only. These are simulated receipts — not official documents — and must not be used for any claim, record keeping, or legal purpose.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">What is a petrol pump bill book and how does this help? <span class="faq-toggle">+</span></div>
+        <div class="faq-q" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this);}" role="button" tabindex="0" aria-expanded="false">What is a petrol pump bill book and how does this help? <span class="faq-toggle">+</span></div>
         <div class="faq-a">A petrol pump bill book is a record of fuel purchase receipts. FuelBill.in is your digital petrol pump bill book — re-create any petrol or diesel receipt with correct pump name, receipt number, FIP number, and transaction details, in the standard format accepted by Indian employers for conveyance and reference.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">Is this bill generator completely free? <span class="faq-toggle">+</span></div>
+        <div class="faq-q" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this);}" role="button" tabindex="0" aria-expanded="false">Is this bill generator completely free? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Yes, FuelBill.in is 100% free. Generate, preview and download petrol, diesel or food bills — no account, no subscription, no charges ever.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">Can I generate both fuel bills and food bills? <span class="faq-toggle">+</span></div>
+        <div class="faq-q" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this);}" role="button" tabindex="0" aria-expanded="false">Can I generate both fuel bills and food bills? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Yes! FuelBill.in has two separate tools — the Fuel Bill Generator for petrol &amp; diesel receipts, and the Food Bill Generator for restaurant bills with CGST &amp; SGST auto-calculation.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">Does the food bill include GST? <span class="faq-toggle">+</span></div>
+        <div class="faq-q" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this);}" role="button" tabindex="0" aria-expanded="false">Does the food bill include GST? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Yes. CGST 2.5% and SGST 2.5% are automatically calculated on the taxable amount. You can also toggle an optional 10% service charge on or off.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">Which petrol pump logos are available? <span class="faq-toggle">+</span></div>
+        <div class="faq-q" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this);}" role="button" tabindex="0" aria-expanded="false">Which petrol pump logos are available? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Indian Oil (IOC), Hindustan Petroleum (HP) and Bharat Petroleum (BPCL) logos are included — the three major public sector oil marketing companies in India.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">Can I download as PDF? <span class="faq-toggle">+</span></div>
+        <div class="faq-q" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this);}" role="button" tabindex="0" aria-expanded="false">Can I download as PDF? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Bills are downloaded as high-resolution PNG images. You can also download as PDF directly, or print from your browser (File → Print → Save as PDF).</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">Does it work on mobile phones? <span class="faq-toggle">+</span></div>
+        <div class="faq-q" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this);}" role="button" tabindex="0" aria-expanded="false">Does it work on mobile phones? <span class="faq-toggle">+</span></div>
         <div class="faq-a">Yes, both generators are fully responsive and work on all smartphones and tablets. Create and download bills directly from your phone.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q" onclick="toggleFaq(this)">Is there a watermark on downloaded bills? <span class="faq-toggle">+</span></div>
+        <div class="faq-q" onclick="toggleFaq(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleFaq(this);}" role="button" tabindex="0" aria-expanded="false">Is there a watermark on downloaded bills? <span class="faq-toggle">+</span></div>
         <div class="faq-a">No watermark is added. The output is a clean, realistic receipt image with no branding from FuelBill.in overlaid on it.</div>
       </div>
     </div>
@@ -760,6 +776,8 @@
   </div>
 </section>
 
+</main>
+
 <!-- ═══ FOOTER ═══ -->
 <footer>
   <div class="container">
@@ -769,18 +787,18 @@
         <p>India's free <strong>fuel bill generator</strong> for personal record keeping. Create petrol &amp; diesel bills with Indian Oil, HP, Bharat Petroleum. Download petrol pump bill instantly — no signup required.</p>
       </div>
       <div>
-        <h4>Tools</h4>
+        <h3>Tools</h3>
         <ul>
           <li><a href="/generator">⛽ Fuel Bill Generator</a></li>
           <li><a href="/food-bill">🍽️ Food Bill Generator</a></li>
         </ul>
-        <h4 style="margin-top:16px;">Quick Links</h4>
+        <h3 style="margin-top:16px;">Quick Links</h3>
         <ul>
           <li><a href="#features">Features</a></li>
           <li><a href="#how-it-works">How It Works</a></li>
           <li><a href="#faq">FAQ</a></li>
         </ul>
-        <h4 style="margin-top:16px;">Bill Guides</h4>
+        <h3 style="margin-top:16px;">Bill Guides</h3>
         <ul>
           <li><a href="/petrol-bill-generator">Petrol Bill Generator</a></li>
           <li><a href="/diesel-bill-generator">Diesel Bill Generator</a></li>
@@ -788,7 +806,7 @@
         </ul>
       </div>
       <div>
-        <h4>Fuel Templates</h4>
+        <h3>Fuel Templates</h3>
         <ul>
           <li><a href="/generator">Indian Oil Bill</a></li>
           <li><a href="/generator">HP Petrol Bill</a></li>
@@ -805,7 +823,7 @@
     </div>
     <div class="footer-bottom">
       <p>© 2026 FuelBill.in · Free Petrol Bill Generator &amp; Diesel Bill Generator India</p>
-      <p style="color:rgba(255,255,255,.35); font-size:11px">fuel bill generator · petrol bill generator free · petrol bill generator India · diesel bill generator · petrol pump bill · fuel bill generator for personal record keeping · petrol receipt generator · petrol bill PDF</p>
+      <p style="color:rgba(255,255,255,.65); font-size:11px">fuel bill generator · petrol bill generator free · petrol bill generator India · diesel bill generator · petrol pump bill · fuel bill generator for personal record keeping · petrol receipt generator · petrol bill PDF</p>
     </div>
   </div>
 </footer>
@@ -835,8 +853,15 @@
   function toggleFaq(el) {
     const item = el.closest('.faq-item');
     const isOpen = item.classList.contains('open');
-    document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-    if (!isOpen) item.classList.add('open');
+    document.querySelectorAll('.faq-item.open').forEach(i => {
+      i.classList.remove('open');
+      const q = i.querySelector('.faq-q');
+      if (q) q.setAttribute('aria-expanded', 'false');
+    });
+    if (!isOpen) {
+      item.classList.add('open');
+      el.setAttribute('aria-expanded', 'true');
+    }
   }
   function toggleMenu() {
     document.getElementById('mobileMenu').classList.toggle('open');
@@ -844,7 +869,5 @@
   function closeMenu() {
     document.getElementById('mobileMenu').classList.remove('open');
   }
-</script>
-<script>window.addEventListener('load',function(){var s=document.createElement('script');s.src='https://cdn.splitbee.io/sb.js';s.async=true;document.head.appendChild(s);});</script>
-</body>
+</script></body>
 </html>
