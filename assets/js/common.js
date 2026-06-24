@@ -27,11 +27,46 @@ async function onTemplateSelected() {
   // Fetch + inject template HTML/CSS into #template-container
   await template.render();
 
-  // Push current form values into the freshly-rendered receipt
+  // Push current form values into the freshly-rendered receipt.
+  // IMPORTANT: this is what actually injects the #pumpLogo <img> into
+  // #section-pump-logo (via tmpl.renderData -> template-specific code),
+  // AFTER the pill tiles already exist from renderTemplateForm() above.
   generate(template);
+
+  // CLS FIX (v3): lock section heights AFTER generate() has run, not
+  // inside renderTemplateForm(). The old v2 fix called
+  // preserveSectionHeight() on the logo body right after the pills were
+  // appended, but BEFORE generate()->renderData() injected the #pumpLogo
+  // <img> beneath them. That meant the lock only ever captured
+  // "pills-only" height, so the jump to "pills + 70px image" on every
+  // single render (including first paint) was never actually prevented —
+  // which is exactly the 0.216 shift PageSpeed was attributing to this
+  // element. Locking here, once everything for this render cycle has
+  // been inserted, captures the true final height.
+  lockAllSectionHeights();
 
   // Sync wrapper height to scaled content so the preview card doesn't overflow or collapse
   syncPreviewWrapperHeight();
+}
+
+/* ----------------------------------------------------------
+   Lock min-height floors for all dynamic sections based on
+   their CURRENT fully-rendered content (pills + any injected
+   images/previews). Called once per render cycle, after both
+   renderTemplateForm() and generate() have finished mutating
+   the DOM — never mid-pipeline.
+   ---------------------------------------------------------- */
+function lockAllSectionHeights() {
+  ['#section-paper-texture', '#section-pump-logo', '#section-optional-fields']
+    .forEach(function(sel) {
+      var section = document.querySelector(sel);
+      if (!section || section.style.display === 'none') return;
+      preserveSectionHeight(section.querySelector('.sec-card-body'));
+    });
+  var dataSection = document.getElementById('section-data');
+  if (dataSection && dataSection.style.display !== 'none') {
+    preserveSectionHeight(dataSection.querySelector('.sec-card-body .row'));
+  }
 }
 
 /* ----------------------------------------------------------
@@ -76,6 +111,20 @@ function syncPreviewWrapperHeight() {
    The box can still grow if new content is taller (we only ever
    raise the floor, never lower it), but it can never visibly
    collapse first.
+
+   CLS FIX (v3) — see lockAllSectionHeights(): the per-section
+   calls to this function INSIDE renderTemplateForm() (immediately
+   after populating pills) have been removed for the texture,
+   logo, and optional-fields sections. They were locking the
+   height too early — before generate()->renderData() had a
+   chance to inject section content (e.g. the #pumpLogo <img>)
+   that belongs in the same card body. This function is still
+   used for the "before clearing" half of the job (so a section
+   never collapses to the bare CSS floor while we wipe its old
+   content), and is now ALSO called once, centrally, after the
+   full render cycle completes — that second call is what
+   actually accounts for everything in the section, including
+   content injected by generate().
    ---------------------------------------------------------- */
 function preserveSectionHeight(body) {
   if (!body) return;
@@ -114,9 +163,9 @@ function renderTemplateForm(tmpl) {
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       texBody.appendChild(lbl);
     });
-    // After repopulating, raise the floor further if this render is taller
-    // than anything we've shown before (box can grow, never re-collapse).
-    preserveSectionHeight(texBody);
+    // NOTE (v3): the "lock after populate" call that used to sit here was
+    // removed — see lockAllSectionHeights(), which now does this once,
+    // centrally, after generate() has also run for this render cycle.
   }
 
   /* ── Pump Logo ── */
@@ -140,7 +189,11 @@ function renderTemplateForm(tmpl) {
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       logoBody.appendChild(lbl);
     });
-    preserveSectionHeight(logoBody);
+    // NOTE (v3): removed the "lock after populate" call here too — at this
+    // point in the pipeline the #pumpLogo <img> hasn't been injected yet
+    // (that happens later, in generate()->renderData()), so locking now
+    // would repeat the exact v2 bug: capturing "pills-only" height as the
+    // floor and then letting the image addition blow past it, uncounted.
   }
 
   /* ── Optional Fields ── */
@@ -163,7 +216,7 @@ function renderTemplateForm(tmpl) {
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       optBody.appendChild(lbl);
     });
-    preserveSectionHeight(optBody);
+    // NOTE (v3): "lock after populate" call removed — see lockAllSectionHeights().
   }
 
   /* ── Data Fields ── */
@@ -191,7 +244,7 @@ function renderTemplateForm(tmpl) {
       col.querySelector('input').addEventListener('input', function() { generate(tmpl); });
       dataRow.appendChild(col);
     });
-    preserveSectionHeight(dataRow);
+    // NOTE (v3): "lock after populate" call removed — see lockAllSectionHeights().
   }
 }
 
@@ -221,6 +274,15 @@ function generate(tmpl) {
   });
 
   tmpl.renderData(data);
+
+  // CLS FIX (v3): re-lock section heights after EVERY generate() call too,
+  // not just after the initial template-switch render. generate() fires on
+  // every radio change / checkbox toggle / text input — including the logo
+  // radio change, which swaps which #pumpLogo image src is shown and can
+  // change this section's height again. Without this, only the very first
+  // render was protected and subsequent in-place updates (e.g. picking a
+  // different logo) could still shift layout.
+  lockAllSectionHeights();
 }
 
 /* ----------------------------------------------------------
