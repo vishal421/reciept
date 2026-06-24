@@ -164,7 +164,8 @@
       --blue:      #1a56db;
       --blue-dark: #1648c0;
       --blue-light:#eef3ff;
-      --green:     #16a34a;
+      --green:     #15803d;
+      --green-dark:#0f5c2c;
       --amber:     #d97706;
       --radius:    10px;
       --shadow-sm: 0 1px 4px rgba(0,0,0,.06);
@@ -322,6 +323,15 @@
     #section-pump-logo .sec-card-body     { min-height: 52px; contain: layout; }
     #section-optional-fields .sec-card-body { min-height: 52px; contain: layout; }
 
+    /* Reserve explicit space for the pump-logo <img> swapped in by JS so it
+       doesn't shift layout when the file loads (paired with width/height
+       attributes added on the element itself — see JS notes below) */
+    #pumpLogo {
+      width: 90px;
+      height: 70px;
+      object-fit: contain;
+    }
+
     /* ── Template selector – same pill style as texture ── */
     .tpl-grid { display: flex; flex-wrap: wrap; gap: 8px; }
     .tpl-label {
@@ -423,6 +433,13 @@
     }
     .btn-download:hover { background: var(--blue-dark); transform: translateY(-1px); }
     .btn-download:active { transform: translateY(0); }
+
+    /* FIX: a11y — accessible-contrast green for the PDF button (was #16a34a on
+       white text ≈ 3.3:1, below the 4.5:1 minimum for 13px bold text).
+       --green is now #15803d (~5.0:1) and gets its own hover/active states
+       so the inline-style specificity issue doesn't suppress hover feedback. */
+    #downloadPdfButton:hover { background: var(--green-dark); }
+    #downloadPdfButton:active { background: var(--green-dark); }
 
     /* ── PREVIEW COLUMN ── */
     .preview-col {
@@ -1054,6 +1071,21 @@
     document.getElementById('loadDefaultData').addEventListener('click', async function () { await onTemplateSelected(); });
     document.getElementById('downloadButton').addEventListener('click', function () { downloadReceipt(); });
     document.getElementById('downloadPdfButton').addEventListener('click', function () { downloadReceiptPdf(); });
+
+    // FIX: CLS — once common.js renders the #pumpLogo <img> for the selected
+    // logo tile, make sure it always carries explicit width/height so the
+    // browser reserves space before the file loads (CSS sets the box; this
+    // backstops any inline style that omits the attributes).
+    var logoSection = document.getElementById('section-pump-logo');
+    if (logoSection && 'MutationObserver' in window) {
+      new MutationObserver(function () {
+        var img = document.getElementById('pumpLogo');
+        if (img && !img.hasAttribute('width')) {
+          img.setAttribute('width', '90');
+          img.setAttribute('height', '70');
+        }
+      }).observe(logoSection, { childList: true, subtree: true });
+    }
   });
 
   function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('open'); }
