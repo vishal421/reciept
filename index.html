@@ -6,9 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <link rel="preconnect" href="https://www.googletagmanager.com" />
   <link rel="preconnect" href="https://www.google-analytics.com" />
-  <link rel="dns-prefetch" href="https://static.cloudflareinsights.com" />
-  <!-- Google Analytics — deferred for LCP performance -->
-  <script>window.addEventListener('load',function(){var s=document.createElement('script');s.src='https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3';s.async=true;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-C0CW5VLJW3');});</script>
 
   <!-- ═══ PRIMARY SEO ═══ -->
   <title>Fuel Bill Generator Free – Petrol Bill Generator India | FuelBill.in</title>
@@ -101,12 +98,35 @@
   }
   </script>
 
+  <!-- ═══ IMAGE SCHEMA on homepage ═══ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Free Bill Generator Templates — FuelBill.in",
+    "description": "Fuel bill and food bill templates available on FuelBill.in",
+    "url": "https://fuelbill.in",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Indian Oil Petrol Bill Template", "url": "https://fuelbill.in/generator",
+        "image": "https://fuelbill.in/assets/images/previews/fuel-template-indian-oil.jpg" },
+      { "@type": "ListItem", "position": 2, "name": "HP Petrol Bill Template", "url": "https://fuelbill.in/generator",
+        "image": "https://fuelbill.in/assets/images/previews/fuel-template-hp.jpg" },
+      { "@type": "ListItem", "position": 3, "name": "Bharat Petroleum Bill Template", "url": "https://fuelbill.in/generator",
+        "image": "https://fuelbill.in/assets/images/previews/fuel-template-bharat.jpg" },
+      { "@type": "ListItem", "position": 4, "name": "Classic Food Bill Template", "url": "https://fuelbill.in/food-bill",
+        "image": "https://fuelbill.in/assets/images/previews/food-template-classic.jpg" },
+      { "@type": "ListItem", "position": 5, "name": "Elegant Food Bill Template", "url": "https://fuelbill.in/food-bill",
+        "image": "https://fuelbill.in/assets/images/previews/food-template-elegant.jpg" }
+    ]
+  }
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --ink:        #0f1923;
       --ink2:       #374151;
-      --muted:      #6b7280;
+      --muted:      #5b6472;
       --line:       #e5e7eb;
       --bg:         #f7f8fa;
       --white:      #ffffff;
@@ -114,7 +134,7 @@
       --blue-dark:  #1648c0;
       --blue-light: #eef3ff;
       --green:      #16a34a;
-      --amber:      #d97706;
+      --amber:      #b45309;
       --red:        #dc2626;
       --radius:     10px;
       --shadow-sm:  0 1px 4px rgba(0,0,0,.06);
@@ -157,14 +177,14 @@
     /* ═══ BOOKMARK BUTTON ═══ */
     .btn-bookmark {
       display: inline-flex; align-items: center; gap: 6px;
-      background: #fff8e1; color: #b45309;
+      background: #fff8e1; color: #7c3e00;
       font-size: 12px; font-weight: 700;
       padding: 6px 12px; border-radius: 6px;
-      border: 1.5px solid #fcd34d;
+      border: 1.5px solid #d99a1f;
       cursor: pointer; transition: background .15s, border-color .15s;
       white-space: nowrap;
     }
-    .btn-bookmark:hover { background: #fef3c7; border-color: #f59e0b; text-decoration: none; color: #92400e; }
+    .btn-bookmark:hover { background: #fef3c7; border-color: #92660a; text-decoration: none; color: #5c3001; }
     .btn-bookmark.bookmarked { background: #ecfdf5; color: #065f46; border-color: #6ee7b7; }
     @media (max-width: 768px) {
       .btn-bookmark { font-size: 11px; padding: 5px 10px; gap: 4px; }
@@ -236,7 +256,7 @@
     }
     .btn-secondary:hover { border-color: var(--blue); color: var(--blue); text-decoration: none; }
     .hero-trust {
-      font-size: 12.5px; color: var(--muted);
+      font-size: 12.5px; color: var(--ink2);
       display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;
     }
     .hero-trust span::before { content: '✓ '; color: var(--green); font-weight: 700; }
@@ -262,7 +282,7 @@
     .tag-fuel { background: #dbeafe; color: var(--blue); }
     .tag-food { background: #fef3c7; color: var(--amber); }
     .tool-card h2 { font-size: 17px; font-weight: 800; color: var(--ink); margin-bottom: 6px; letter-spacing: -0.3px; }
-    .tool-card p { font-size: 12.5px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+    .tool-card p { font-size: 12.5px; color: var(--ink2); line-height: 1.6; margin-bottom: 14px; }
     .tool-card-link {
       font-size: 13px; font-weight: 700; color: var(--blue);
       display: inline-flex; align-items: center; gap: 4px;
@@ -271,7 +291,7 @@
       display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px;
     }
     .feat-chip {
-      font-size: 11px; font-weight: 500; color: var(--muted);
+      font-size: 11px; font-weight: 500; color: var(--ink2);
       background: var(--bg); border: 1px solid var(--line);
       padding: 2px 8px; border-radius: 10px;
     }
@@ -279,7 +299,7 @@
     /* ═══ LOGOS BAR ═══ */
     .logos-bar { background: var(--white); border-bottom: 1px solid var(--line); padding: 18px 0; }
     .logos-inner { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
-    .logos-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-right: 4px; }
+    .logos-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--ink2); margin-right: 4px; }
     .logo-pill {
       display: flex; align-items: center; gap: 7px;
       background: var(--bg); border: 1px solid var(--line);
@@ -289,7 +309,7 @@
     .logo-pill .dot { width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 800; color: #fff; }
     .dot-ioc { background: #cc2222; }
     .dot-hp  { background: #003f8a; }
-    .logo-pill .dot.dot-bp { background: #e8b800; color: #333; }
+    .logo-pill .dot.dot-bp { background: #a87600; color: #fff; }
     .dot-food { background: var(--amber); }
 
     /* ═══ SECTION UTILS ═══ */
@@ -312,7 +332,7 @@
     .feature-card:hover { box-shadow: var(--shadow-md); border-color: #c7d9f8; transform: translateY(-2px); }
     .feature-icon { width: 40px; height: 40px; background: var(--blue-light); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 12px; }
     .feature-card h3 { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
-    .feature-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .feature-card p { font-size: 12px; color: var(--ink2); line-height: 1.6; }
 
     /* ═══ HOW IT WORKS ═══ */
     .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; counter-reset: steps; justify-content: center; }
@@ -324,7 +344,7 @@
     }
     .step-icon { font-size: 26px; margin-bottom: 10px; }
     .step-card h3 { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
-    .step-card p { font-size: 12px; color: var(--muted); line-height: 1.6; }
+    .step-card p { font-size: 12px; color: var(--ink2); line-height: 1.6; }
 
     /* ═══ USE CASES ═══ */
     .usecases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
@@ -332,13 +352,14 @@
     .usecase-card:hover { box-shadow: var(--shadow-md); }
     .usecase-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
     .usecase-card h3 { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
-    .usecase-card p { font-size: 12px; color: var(--muted); line-height: 1.55; }
+    .usecase-card p { font-size: 12px; color: var(--ink2); line-height: 1.55; }
 
     /* ═══ FAQ ═══ */
     .faq-list { max-width: 720px; margin: 0 auto; }
     .faq-item { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
     .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px; cursor: pointer; font-size: 14px; font-weight: 600; color: var(--ink); gap: 12px; user-select: none; transition: background .15s; }
     .faq-q:hover { background: var(--bg); }
+    .faq-q:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
     .faq-toggle { flex-shrink: 0; width: 22px; height: 22px; background: var(--blue-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: var(--blue); font-weight: 700; transition: transform .25s; }
     .faq-item.open .faq-toggle { transform: rotate(45deg); }
     .faq-a { padding: 0 18px; max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s; font-size: 13px; color: var(--ink2); line-height: 1.7; }
@@ -357,13 +378,13 @@
       pointer-events: none;
     }
     .cta-banner h2 { font-size: clamp(20px, 4vw, 34px); font-weight: 800; color: #fff; letter-spacing: -0.5px; margin-bottom: 10px; position: relative; }
-    .cta-banner p { font-size: 14px; color: rgba(255,255,255,.8); margin-bottom: 26px; max-width: 420px; margin-left: auto; margin-right: auto; position: relative; }
+    .cta-banner p { font-size: 14px; color: rgba(255,255,255,.85); margin-bottom: 26px; max-width: 420px; margin-left: auto; margin-right: auto; position: relative; }
     .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; }
     .btn-white { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--blue); font-size: 14px; font-weight: 700; padding: 12px 24px; border-radius: var(--radius); transition: transform .15s, box-shadow .15s; text-decoration: none; box-shadow: 0 4px 16px rgba(0,0,0,.2); }
     .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.25); text-decoration: none; color: var(--blue-dark); }
-    .btn-white-outline { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #fff; font-size: 14px; font-weight: 600; padding: 11px 22px; border-radius: var(--radius); border: 2px solid rgba(255,255,255,.5); transition: border-color .15s, background .15s; text-decoration: none; }
+    .btn-white-outline { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: #fff; font-size: 14px; font-weight: 600; padding: 11px 22px; border-radius: var(--radius); border: 2px solid rgba(255,255,255,.6); transition: border-color .15s, background .15s; text-decoration: none; }
     .btn-white-outline:hover { border-color: #fff; background: rgba(255,255,255,.1); text-decoration: none; color: #fff; }
-    .cta-trust { margin-top: 18px; font-size: 11.5px; color: rgba(255,255,255,.55); position: relative; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .cta-trust { margin-top: 18px; font-size: 11.5px; color: rgba(255,255,255,.75); position: relative; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
     .cta-trust span::before { content: '• '; }
     .cta-trust span:first-child::before { content: ''; }
 
@@ -374,7 +395,7 @@
     .seo-content p { margin-bottom: 11px; }
     .seo-content ul { padding-left: 20px; margin-bottom: 11px; }
     .seo-content li { margin-bottom: 4px; }
-    .seo-content a { text-decoration: underline; text-decoration-color: rgba(26,86,219,.45); text-underline-offset: 2px; }
+    .seo-content a { text-decoration: underline; text-decoration-color: rgba(26,86,219,.55); text-underline-offset: 2px; }
     .seo-content a:hover { text-decoration-color: var(--blue); }
 
     /* ═══ SKIP LINK ═══ */
@@ -386,18 +407,18 @@
     .skip-link:focus { left: 0; }
 
     /* ═══ FOOTER ═══ */
-    footer { background: var(--ink); color: rgba(255,255,255,.7); padding: 44px 0 28px; font-size: 13px; }
+    footer { background: var(--ink); color: rgba(255,255,255,.85); padding: 44px 0 28px; font-size: 13px; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 36px; margin-bottom: 32px; }
     .footer-brand .nav-logo { color: #fff; font-size: 16px; margin-bottom: 10px; }
-    .footer-brand p { font-size: 12.5px; line-height: 1.7; max-width: 260px; }
-    footer h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,.9); margin-bottom: 12px; }
+    .footer-brand p { font-size: 12.5px; line-height: 1.7; max-width: 260px; color: rgba(255,255,255,.85); }
+    footer h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,.95); margin-bottom: 12px; }
     footer ul { list-style: none; }
     footer li { margin-bottom: 8px; }
-    footer a { color: rgba(255,255,255,.6); font-size: 13px; }
-    footer a:hover { color: #fff; text-decoration: none; }
-    .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); padding-top: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .footer-bottom p { font-size: 12px; }
-    .disclaimer { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); border-radius: 6px; padding: 10px 14px; font-size: 11.5px; color: rgba(255,255,255,.78); margin-top: 20px; line-height: 1.6; }
+    footer a { color: rgba(255,255,255,.85); font-size: 13px; text-decoration: underline; text-decoration-color: rgba(255,255,255,.35); text-underline-offset: 2px; }
+    footer a:hover { color: #fff; text-decoration-color: #fff; }
+    .footer-bottom { border-top: 1px solid rgba(255,255,255,.15); padding-top: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .footer-bottom p { font-size: 12px; color: rgba(255,255,255,.85); }
+    .disclaimer { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.18); border-radius: 6px; padding: 10px 14px; font-size: 11.5px; color: rgba(255,255,255,.85); margin-top: 20px; line-height: 1.6; }
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 768px) {
@@ -422,29 +443,6 @@
       .logo-pill { padding: 4px 10px 4px 6px; font-size: 11px; }
     }
   </style>
-
-  <!-- ═══ IMAGE SCHEMA on homepage ═══ -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": "Free Bill Generator Templates — FuelBill.in",
-    "description": "Fuel bill and food bill templates available on FuelBill.in",
-    "url": "https://fuelbill.in",
-    "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Indian Oil Petrol Bill Template", "url": "https://fuelbill.in/generator",
-        "image": "https://fuelbill.in/assets/images/previews/fuel-template-indian-oil.jpg" },
-      { "@type": "ListItem", "position": 2, "name": "HP Petrol Bill Template", "url": "https://fuelbill.in/generator",
-        "image": "https://fuelbill.in/assets/images/previews/fuel-template-hp.jpg" },
-      { "@type": "ListItem", "position": 3, "name": "Bharat Petroleum Bill Template", "url": "https://fuelbill.in/generator",
-        "image": "https://fuelbill.in/assets/images/previews/fuel-template-bharat.jpg" },
-      { "@type": "ListItem", "position": 4, "name": "Classic Food Bill Template", "url": "https://fuelbill.in/food-bill",
-        "image": "https://fuelbill.in/assets/images/previews/food-template-classic.jpg" },
-      { "@type": "ListItem", "position": 5, "name": "Elegant Food Bill Template", "url": "https://fuelbill.in/food-bill",
-        "image": "https://fuelbill.in/assets/images/previews/food-template-elegant.jpg" }
-    ]
-  }
-  </script>
 </head>
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -823,7 +821,7 @@
     </div>
     <div class="footer-bottom">
       <p>© 2026 FuelBill.in · Free Petrol Bill Generator &amp; Diesel Bill Generator India</p>
-      <p style="color:rgba(255,255,255,.65); font-size:11px">fuel bill generator · petrol bill generator free · petrol bill generator India · diesel bill generator · petrol pump bill · fuel bill generator for personal record keeping · petrol receipt generator · petrol bill PDF</p>
+      <p style="color:rgba(255,255,255,.75); font-size:11px">fuel bill generator · petrol bill generator free · petrol bill generator India · diesel bill generator · petrol pump bill · fuel bill generator for personal record keeping · petrol receipt generator · petrol bill PDF</p>
     </div>
   </div>
 </footer>
@@ -833,10 +831,9 @@
     var url = 'https://fuelbill.in';
     var title = 'FuelBill.in – Free Fuel & Food Bill Generator India';
     var btns = document.querySelectorAll('#bookmarkBtn, #bookmarkBtnMobile');
-    // Modern browsers block programmatic bookmarking; show instructions
-    if (window.sidebar && window.sidebar.addPanel) { // Firefox old
+    if (window.sidebar && window.sidebar.addPanel) {
       window.sidebar.addPanel(title, url, '');
-    } else if (window.external && ('AddFavorite' in window.external)) { // IE
+    } else if (window.external && ('AddFavorite' in window.external)) {
       window.external.AddFavorite(url, title);
     } else {
       var msg = navigator.userAgent.indexOf('Mac') !== -1
@@ -848,8 +845,6 @@
     }
     btns.forEach(function(b){ b.innerHTML='✓ Bookmarked!'; b.classList.add('bookmarked'); });
   }
-</script>
-<script>
   function toggleFaq(el) {
     const item = el.closest('.faq-item');
     const isOpen = item.classList.contains('open');
@@ -869,5 +864,28 @@
   function closeMenu() {
     document.getElementById('mobileMenu').classList.remove('open');
   }
-</script></body>
+</script>
+
+<!-- Google Analytics — deferred until after load + idle, so it never competes with LCP -->
+<script>
+  window.addEventListener('load', function () {
+    var fire = function () {
+      var s = document.createElement('script');
+      s.src = 'https://www.googletagmanager.com/gtag/js?id=G-C0CW5VLJW3';
+      s.async = true;
+      document.head.appendChild(s);
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      window.gtag = gtag;
+      gtag('js', new Date());
+      gtag('config', 'G-C0CW5VLJW3');
+    };
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(fire, { timeout: 3000 });
+    } else {
+      setTimeout(fire, 1500);
+    }
+  });
+</script>
+</body>
 </html>
