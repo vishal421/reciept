@@ -484,13 +484,26 @@
        Reserve space upfront so wrapper doesn't cause layout shift. */
     .preview-scale-wrapper {
       width: 295px;
-      /* Reserve minimum height to prevent CLS while template loads */
-      min-height: 480px;
+      /* Reserve minimum height to prevent CLS while template loads.
+         Raised from 480px -> 620px: 480px was sized for the SCALED
+         (0.85x) container before #template-container's content
+         (receipt HTML + CSS) finishes loading async, and undershot
+         the real first-paint height on desktop. This is now a closer
+         static match to the actual rendered receipt height at 0.85
+         scale, so common.js's lockPreviewWrapperHeight() /
+         syncPreviewWrapperHeight() have to bridge a much smaller gap
+         instead of the full collapse-to-480-then-jump that desktop
+         was showing. Re-measure against your live default template
+         and adjust if it doesn't match exactly — this number should
+         be (template-1's natural unscaled height * 0.85), rounded up
+         a little for safety. */
+      min-height: 620px;
       contain: layout;
+    }
     }
     #template-container {
       display: block;
-      min-height: 480px;
+      min-height: 620px;   /* keep in sync with .preview-scale-wrapper above */
       /* FIX: removed rotate(-0.3deg) — rotation forces sub-pixel anti-aliasing
          on Retina/iPhone, causing blurry text. Scale only on integer-friendly axis. */
       transform: scale(0.85);
