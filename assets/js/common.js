@@ -55,23 +55,34 @@ function syncPreviewWrapperHeight() {
 }
 
 /* ----------------------------------------------------------
-   CLS FIX: Lock a card body's min-height to whatever it just
-   rendered at, BEFORE the next rebuild clears it back to an
-   empty state. Without this, every call to renderTemplateForm
-   does innerHTML = '' (collapsing the box back toward the CSS
-   floor) and then re-populates it a moment later — on slow
-   devices/connections that collapse-then-regrow is visible and
-   contributes to layout shift on top of the floor being too low
-   to begin with. This keeps the box at least as tall as the
-   tallest content it has ever shown, so it can grow but never
-   visibly collapses.
+   CLS FIX (v2): Lock a card body's min-height BEFORE we clear
+   its contents, not after we repopulate it.
+
+   The original bug: renderTemplateForm() did
+     body.innerHTML = ''          → collapses to the 52px CSS floor
+     ...append new tiles...       → grows back past 52px
+     lockSectionHeight(body)      → locks AFTER the regrow
+
+   On a real browser (and on PSI desktop, which runs fast enough
+   to actually paint between those two synchronous-looking steps
+   once images/fonts resettle) that collapse-then-regrow is a
+   visible, scored layout shift. Locking the height after the
+   fact only protects the *next* render, not the one currently
+   happening — and the very first render on page load has no
+   prior lock to fall back on at all.
+
+   Fix: capture the body's current rendered height and apply it
+   as an inline min-height floor BEFORE innerHTML is touched.
+   The box can still grow if new content is taller (we only ever
+   raise the floor, never lower it), but it can never visibly
+   collapse first.
    ---------------------------------------------------------- */
-function lockSectionHeight(body) {
+function preserveSectionHeight(body) {
   if (!body) return;
-  var rendered = body.getBoundingClientRect().height;
-  var currentMin = parseFloat(body.style.minHeight) || 0;
-  if (rendered > currentMin) {
-    body.style.minHeight = rendered + 'px';
+  var current = body.getBoundingClientRect().height;
+  var existingMin = parseFloat(body.style.minHeight) || 0;
+  if (current > existingMin) {
+    body.style.minHeight = current + 'px';
   }
 }
 
@@ -89,6 +100,9 @@ function renderTemplateForm(tmpl) {
   } else {
     texSection.style.display = '';
     var texBody = texSection.querySelector('.sec-card-body');
+    // CLS FIX: lock height to current rendered size BEFORE clearing,
+    // so the box never collapses to the bare CSS floor mid-rebuild.
+    preserveSectionHeight(texBody);
     texBody.innerHTML = '';
     texList.forEach(function(f, i) {
       var lbl = document.createElement('label');
@@ -100,8 +114,9 @@ function renderTemplateForm(tmpl) {
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       texBody.appendChild(lbl);
     });
-    // CLS FIX: lock this card's height to what it just rendered at
-    lockSectionHeight(texBody);
+    // After repopulating, raise the floor further if this render is taller
+    // than anything we've shown before (box can grow, never re-collapse).
+    preserveSectionHeight(texBody);
   }
 
   /* ── Pump Logo ── */
@@ -112,6 +127,8 @@ function renderTemplateForm(tmpl) {
   } else {
     logoSection.style.display = '';
     var logoBody = logoSection.querySelector('.sec-card-body');
+    // CLS FIX: lock BEFORE clearing — see preserveSectionHeight() comment above.
+    preserveSectionHeight(logoBody);
     logoBody.innerHTML = '';
     logoList.forEach(function(f, i) {
       var lbl = document.createElement('label');
@@ -123,8 +140,7 @@ function renderTemplateForm(tmpl) {
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       logoBody.appendChild(lbl);
     });
-    // CLS FIX: lock this card's height to what it just rendered at
-    lockSectionHeight(logoBody);
+    preserveSectionHeight(logoBody);
   }
 
   /* ── Optional Fields ── */
@@ -135,6 +151,8 @@ function renderTemplateForm(tmpl) {
   } else {
     optSection.style.display = '';
     var optBody = optSection.querySelector('.sec-card-body');
+    // CLS FIX: lock BEFORE clearing — see preserveSectionHeight() comment above.
+    preserveSectionHeight(optBody);
     optBody.innerHTML = '';
     optList.forEach(function(f) {
       var lbl = document.createElement('label');
@@ -145,8 +163,7 @@ function renderTemplateForm(tmpl) {
       lbl.querySelector('input').addEventListener('change', function() { generate(tmpl); });
       optBody.appendChild(lbl);
     });
-    // CLS FIX: lock this card's height to what it just rendered at
-    lockSectionHeight(optBody);
+    preserveSectionHeight(optBody);
   }
 
   /* ── Data Fields ── */
@@ -157,6 +174,9 @@ function renderTemplateForm(tmpl) {
   } else {
     dataSection.style.display = '';
     var dataRow = dataSection.querySelector('.sec-card-body .row');
+    // CLS FIX: same pattern applied here for consistency, in case future
+    // templates vary field counts enough to change this row's height.
+    preserveSectionHeight(dataRow);
     dataRow.innerHTML = '';
     fieldList.forEach(function(f) {
       var col = document.createElement('div');
@@ -171,6 +191,7 @@ function renderTemplateForm(tmpl) {
       col.querySelector('input').addEventListener('input', function() { generate(tmpl); });
       dataRow.appendChild(col);
     });
+    preserveSectionHeight(dataRow);
   }
 }
 
