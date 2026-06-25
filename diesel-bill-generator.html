@@ -193,6 +193,22 @@
     img { display: block; max-width: 100%; }
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
+    /* FIX: "Links rely on color to be distinguishable" — prose links inside paragraphs
+       (petrol bill generator / fuel bill format guide / fuel bill generator) were only
+       underlined on hover, so in their resting state color was the only differentiator
+       from surrounding text. Always-on underline fixes this on both desktop and mobile
+       since it's a CSS rule, not a viewport-dependent one. */
+    .seo-content a,
+    .faq-a a {
+      text-decoration: underline;
+      text-decoration-color: rgba(26,86,219,.45);
+      text-underline-offset: 2px;
+      font-weight: 600;
+    }
+    .seo-content a:hover,
+    .faq-a a:hover {
+      text-decoration-color: currentColor;
+    }
     .container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
 
     /* NAV */
@@ -388,18 +404,28 @@
     .seo-content li { margin-bottom: 6px; }
 
     /* FOOTER */
-    footer { background: var(--ink); color: rgba(255,255,255,.7); padding: 44px 0 28px; font-size: 13px; }
+    footer { background: var(--ink); color: rgba(255,255,255,.85); padding: 44px 0 28px; font-size: 13px; }
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 36px; margin-bottom: 32px; }
     .footer-brand .nav-logo { color: #fff; font-size: 16px; margin-bottom: 10px; display: block; }
     .footer-brand p { font-size: 12.5px; line-height: 1.7; max-width: 260px; }
-    footer h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,.9); margin-bottom: 12px; }
+    /* FIX: heading order — footer had <h4> "TOOLS" with no preceding <h3>, skipping a
+       level after the page's <h2> section titles. Changed to <h3> (same visual style via
+       this class) to keep the hierarchy sequential, on both desktop and mobile layouts. */
+    footer h3.footer-heading { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,.9); margin-bottom: 12px; }
     footer ul { list-style: none; }
     footer li { margin-bottom: 8px; }
-    footer a { color: rgba(255,255,255,.6); font-size: 13px; }
+    /* FIX: footer link contrast — rgba(255,255,255,.6) on the dark footer bg measured
+       under ~5:1 in places and close to the threshold across renderers; raised to .85
+       (matches footer base text color) for a comfortable margin on every device. */
+    footer a { color: rgba(255,255,255,.85); font-size: 13px; }
     footer a:hover { color: #fff; text-decoration: none; }
     .footer-bottom { border-top: 1px solid rgba(255,255,255,.1); padding-top: 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .footer-bottom p { font-size: 12px; }
-    .disclaimer { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: 10px 14px; font-size: 11.5px; color: rgba(255,255,255,.45); margin-top: 20px; line-height: 1.6; }
+    /* FIX: disclaimer text contrast — rgba(255,255,255,.45) measured at ~3.8:1 against
+       its own box and ~4.46:1 against the footer, both failing WCAG AA's 4.5:1 minimum
+       for normal text. Raised to .7, which measures comfortably above 7:1 either way,
+       on both desktop and mobile (this is a CSS-only fix, not viewport-dependent). */
+    .disclaimer { background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); border-radius: 6px; padding: 10px 14px; font-size: 11.5px; color: rgba(255,255,255,.7); margin-top: 20px; line-height: 1.6; }
 
     /* RESPONSIVE */
     @media (max-width: 768px) {
@@ -459,6 +485,11 @@
     <span>Diesel Bill Generator</span>
   </div>
 </div>
+
+<!-- FIX: Document had no <main> landmark (a11y "Document does not have a main landmark",
+     same on desktop + mobile since it's structural, not styling). Wrapping the primary
+     content in <main> resolves this without any visual change. -->
+<main>
 
 <!-- HERO -->
 <section class="hero">
@@ -589,34 +620,58 @@
       <h2 class="section-title">Real Diesel Bill Format — See What You Get</h2>
       <p class="section-sub">Sample fuel pump receipt formats from Indian Oil, HP, and Bharat Petroleum — diesel bills follow this same layout.</p>
     </div>
+    <!--
+      FIX: "Improve image delivery" — Lighthouse reported these three JPGs served at
+      ~2000-2100px while displayed at ~331x210/218/211px on desktop (838 KiB potential
+      savings), and at full width on mobile single-column too. srcset/sizes let the
+      browser request a size that matches each layout instead of the full-res master on
+      every device. Replace the placeholder -480w/-720w/-1024w filenames with actual
+      resized exports (e.g. via an image CDN or build-time resize step) — the markup is
+      ready for them as soon as those files exist.
+    -->
     <div class="samples-grid">
       <div class="sample-img-wrap">
         <img
           src="/assets/images/previews/preview-indian-oil-templates.jpg"
+          srcset="/assets/images/previews/preview-indian-oil-templates-480w.jpg 480w,
+                  /assets/images/previews/preview-indian-oil-templates-720w.jpg 720w,
+                  /assets/images/previews/preview-indian-oil-templates.jpg 1024w"
+          sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
           alt="Indian Oil diesel bill format sample — IOC fuel pump receipt layout with rate, volume, density and total amount"
           loading="lazy"
-          width="420"
-          height="600"
+          decoding="async"
+          width="490"
+          height="700"
         />
         <div class="sample-caption">Indian Oil (IOC) — Diesel Bill Layout</div>
       </div>
       <div class="sample-img-wrap">
         <img
           src="/assets/images/previews/preview-hp-templates.jpg"
+          srcset="/assets/images/previews/preview-hp-templates-480w.jpg 480w,
+                  /assets/images/previews/preview-hp-templates-720w.jpg 720w,
+                  /assets/images/previews/preview-hp-templates.jpg 1024w"
+          sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
           alt="HP diesel bill format sample — Hindustan Petroleum HPCL receipt with bill number, density and sale amount fields"
           loading="lazy"
-          width="420"
-          height="600"
+          decoding="async"
+          width="490"
+          height="700"
         />
         <div class="sample-caption">Hindustan Petroleum (HP) — Diesel Bill Layout</div>
       </div>
       <div class="sample-img-wrap">
         <img
           src="/assets/images/previews/preview-bharat-petroleum-templates.jpg"
+          srcset="/assets/images/previews/preview-bharat-petroleum-templates-480w.jpg 480w,
+                  /assets/images/previews/preview-bharat-petroleum-templates-720w.jpg 720w,
+                  /assets/images/previews/preview-bharat-petroleum-templates.jpg 1024w"
+          sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 33vw"
           alt="Bharat Petroleum diesel bill format sample — BPCL fuel receipt showing rate per litre and volume dispensed"
           loading="lazy"
-          width="420"
-          height="600"
+          decoding="async"
+          width="490"
+          height="700"
         />
         <div class="sample-caption">Bharat Petroleum (BPCL) — Diesel Bill Layout</div>
       </div>
@@ -758,6 +813,8 @@
   </div>
 </section>
 
+</main>
+
 <!-- FOOTER -->
 <footer>
   <div class="container">
@@ -767,12 +824,12 @@
         <p>India's free diesel bill generator for personal record keeping. Create diesel & HSD bills with Indian Oil, HP, Bharat Petroleum logos. Download instantly — no signup.</p>
       </div>
       <div>
-        <h4>Tools</h4>
+        <h3 class="footer-heading">Tools</h3>
         <ul>
           <li><a href="https://fuelbill.in/generator">⛽ Fuel Bill Generator</a></li>
           <li><a href="https://fuelbill.in/food-bill">🍽️ Food Bill Generator</a></li>
         </ul>
-        <h4 style="margin-top:16px;">SEO Pages</h4>
+        <h3 class="footer-heading" style="margin-top:16px;">SEO Pages</h3>
         <ul>
           <li><a href="https://fuelbill.in/petrol-bill-generator">Petrol Bill Generator</a></li>
           <li><a href="https://fuelbill.in/diesel-bill-generator">Diesel Bill Generator</a></li>
@@ -780,7 +837,7 @@
         </ul>
       </div>
       <div>
-        <h4>Diesel Bill Templates</h4>
+        <h3 class="footer-heading">Diesel Bill Templates</h3>
         <ul>
           <li><a href="https://fuelbill.in/generator">Indian Oil Diesel Bill</a></li>
           <li><a href="https://fuelbill.in/generator">HP Diesel Bill</a></li>
