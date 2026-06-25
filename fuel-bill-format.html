@@ -175,6 +175,20 @@
     img { display: block; max-width: 100%; }
     a { color: var(--blue); text-decoration: none; }
     a:hover { text-decoration: underline; }
+    /* FIX: links inside body copy must be distinguishable by more than color alone
+       (Lighthouse a11y: "Links rely on color to be distinguishable").
+       Underline is now always-on for prose links, not just on hover. */
+    .seo-content a,
+    .faq-a a {
+      text-decoration: underline;
+      text-decoration-color: rgba(26,86,219,.45);
+      text-underline-offset: 2px;
+      font-weight: 600;
+    }
+    .seo-content a:hover,
+    .faq-a a:hover {
+      text-decoration-color: currentColor;
+    }
     .container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
 
     /* NAV */
@@ -383,7 +397,9 @@
     .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 36px; margin-bottom: 32px; }
     .footer-brand .nav-logo { color: #fff; font-size: 16px; margin-bottom: 10px; display: block; }
     .footer-brand p { font-size: 12.5px; line-height: 1.7; max-width: 260px; }
-    footer h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,.9); margin-bottom: 12px; }
+    /* FIX: heading order — was h4, no h3 before it (a11y "heading order" failure).
+       These are now h3 to follow the h2 page title sequentially. Visual size unchanged via explicit rule below. */
+    footer h3.footer-heading { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: rgba(255,255,255,.9); margin-bottom: 12px; }
     footer ul { list-style: none; }
     footer li { margin-bottom: 8px; }
     footer a {
@@ -454,6 +470,10 @@
     <span>Fuel Bill Format</span>
   </div>
 </div>
+
+<!-- FIX: Document had no <main> landmark (a11y "Document does not have a main landmark").
+     Wrapping the primary page content in <main> resolves this without changing layout/CSS. -->
+<main>
 
 <!-- HERO -->
 <section class="hero">
@@ -585,44 +605,69 @@
       <h2 class="section-title">Fuel Bill Sample — Indian Oil, HP &amp; Bharat Petroleum</h2>
       <p class="section-sub">Real examples of the fuel bill format used at petrol pumps across India.</p>
     </div>
+    <!--
+      FIX: "Improve image delivery" — Lighthouse reported these four JPGs at ~2000–2100px
+      wide while displayed at ~245x155px (1,137 KiB potential savings). The intrinsic
+      width/height attributes below are corrected to match realistic served dimensions,
+      and srcset/sizes are added so the browser requests an appropriately sized asset
+      instead of the full-resolution master. Replace the placeholder -480w/-960w filenames
+      with your actual resized exports (e.g. via an image CDN or a build-time resize step);
+      the markup is ready for them as soon as those files exist.
+    -->
     <div class="samples-grid">
       <div class="sample-img-wrap">
         <img
           src="/assets/images/previews/preview-indian-oil-templates.jpg"
+          srcset="/assets/images/previews/preview-indian-oil-templates-480w.jpg 480w,
+                  /assets/images/previews/preview-indian-oil-templates.jpg 960w"
+          sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 245px"
           alt="Indian Oil fuel bill format sample showing IOC petrol pump receipt with receipt number, rate, volume and total amount"
           loading="lazy"
-          width="420"
-          height="600"
+          decoding="async"
+          width="490"
+          height="700"
         />
         <div class="sample-caption">Indian Oil (IOC) Format</div>
       </div>
       <div class="sample-img-wrap">
         <img
           src="/assets/images/previews/preview-hp-templates.jpg"
+          srcset="/assets/images/previews/preview-hp-templates-480w.jpg 480w,
+                  /assets/images/previews/preview-hp-templates.jpg 960w"
+          sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 245px"
           alt="HP fuel bill format sample showing Hindustan Petroleum HPCL receipt layout with bill number and sale amount"
           loading="lazy"
-          width="420"
-          height="600"
+          decoding="async"
+          width="490"
+          height="700"
         />
         <div class="sample-caption">Hindustan Petroleum (HP) Format</div>
       </div>
       <div class="sample-img-wrap">
         <img
           src="/assets/images/previews/preview-bharat-petroleum-templates.jpg"
+          srcset="/assets/images/previews/preview-bharat-petroleum-templates-480w.jpg 480w,
+                  /assets/images/previews/preview-bharat-petroleum-templates.jpg 960w"
+          sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 245px"
           alt="Bharat Petroleum fuel bill format sample showing BPCL receipt with rate per litre and volume dispensed"
           loading="lazy"
-          width="420"
-          height="600"
+          decoding="async"
+          width="490"
+          height="700"
         />
         <div class="sample-caption">Bharat Petroleum (BPCL) Format</div>
       </div>
       <div class="sample-img-wrap">
         <img
           src="/assets/images/previews/preview-texture-fuel-templates.jpg"
+          srcset="/assets/images/previews/preview-texture-fuel-templates-480w.jpg 480w,
+                  /assets/images/previews/preview-texture-fuel-templates.jpg 960w"
+          sizes="(max-width: 480px) 100vw, (max-width: 768px) 50vw, 245px"
           alt="Fuel bill receipt paper texture sample showing the crumpled thermal paper look used on Indian petrol pump bills"
           loading="lazy"
-          width="420"
-          height="600"
+          decoding="async"
+          width="490"
+          height="700"
         />
         <div class="sample-caption">Thermal Receipt Texture</div>
       </div>
@@ -764,6 +809,8 @@
   </div>
 </section>
 
+</main>
+
 <!-- FOOTER -->
 <footer>
   <div class="container">
@@ -773,24 +820,20 @@
         <p>India's free fuel bill generator for personal record keeping. See the standard format and create petrol or diesel bills with Indian Oil, HP, Bharat Petroleum logos.</p>
       </div>
       <div>
-        <color=white>
-        <h4>Tools</h4>
+        <h3 class="footer-heading">Tools</h3>
         <ul>
-          
           <li><a href="https://fuelbill.in/generator">⛽ Fuel Bill Generator</a></li>
           <li><a href="https://fuelbill.in/food-bill">🍽️ Food Bill Generator</a></li>
         </ul>
-        <h4 style="margin-top:16px;">SEO Pages</h4>
+        <h3 class="footer-heading" style="margin-top:16px;">SEO Pages</h3>
         <ul>
           <li><a href="https://fuelbill.in/petrol-bill-generator">Petrol Bill Generator</a></li>
           <li><a href="https://fuelbill.in/diesel-bill-generator">Diesel Bill Generator</a></li>
           <li><a href="https://fuelbill.in/fuel-bill-format">Fuel Bill Format</a></li>
         </ul>
-          </color=white>
       </div>
       <div>
-  
-        <h4>Format References</h4>
+        <h3 class="footer-heading">Format References</h3>
         <ul>
           <li><a href="https://fuelbill.in/fuel-bill-format#samples">Indian Oil Format Sample</a></li>
           <li><a href="https://fuelbill.in/fuel-bill-format#samples">HP Format Sample</a></li>
@@ -798,7 +841,6 @@
           <li><a href="https://fuelbill.in/generator">Fuel Bill PDF</a></li>
           <li><a href="https://fuelbill.in/generator">Fuel Receipt Generator</a></li>
         </ul>
-        </color=white>
       </div>
     </div>
     <div class="disclaimer">
